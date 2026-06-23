@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ĐỨC GIANG TESTER EDUCATION - Khóa học Tester Manual & Automation</title>
+  <meta name="description"
+    content="Trung tâm đào tạo Tester chuyên sâu: Kiểm thử phần mềm Manual, API Testing, SQL, Selenium Java, Katalon, Playwright, Postman CI/CD. Học thực chiến - đi làm ngay." />
+  <meta name="theme-color" content="#0b2a6b" />
+  <meta property="og:title" content="ĐỨC GIANG TESTER EDUCATION" />
+  <meta property="og:description" content="Khóa học Tester Manual & Automation theo hướng thực chiến 100%." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --blue-900: #0b2a6b;
+      --blue-800: #103a8a;
+      --blue-700: #1551b5;
+      --blue-600: #1d63d8;
+      --blue-500: #2f7bf0;
+      --blue-100: #e7f0ff;
+      --ink: #0f172a;
+      --muted: #5b6b85;
+      --line: #e2e8f0;
+      --bg: #f5f8ff;
+      --white: #ffffff;
+      --accent: #f59e0b;
+      --green: #16a34a;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(15, 42, 107, 0.08);
+      --shadow-lg: 0 24px 60px rgba(15, 42, 107, 0.16);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      padding: 72px 0;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue-600);
+      background: var(--blue-100);
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--blue-900);
+      text-wrap: balance;
+    }
+
+    .section-sub {
+      max-width: 640px;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .center .section-sub {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ---------- Header ---------- */
+    header.nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue-700), var(--blue-500));
+      color: #fff;
+      font-weight: 800;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    .brand-name {
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--blue-900);
+      line-height: 1.1;
+    }
+
+    .brand-name span {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--muted);
+    }
+
+    .nav-links {
+      display: none;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--ink);
+      transition: color .2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--blue-600);
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue-600);
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      transition: background .2s, transform .15s;
+    }
+
+    .nav-cta:hover {
+      background: var(--blue-700);
+      transform: translateY(-1px);
+    }
+
+    @media (min-width: 900px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: relative;
+      background: radial-gradient(1200px 500px at 80% -10%, #1d63d8 0%, transparent 60%),
+        linear-gradient(160deg, var(--blue-900), var(--blue-800));
+      color: #fff;
+      overflow: hidden;
+      padding: 84px 0 96px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+      background-size: 22px 22px;
+      mask-image: linear-gradient(180deg, #000, transparent 80%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      position: relative;
+      display: grid;
+      gap: 40px;
+      align-items: center;
+    }
+
+    @media (min-width: 960px) {
+      .hero-grid {
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 56px;
+      }
+    }
+
+    .hero .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #dbe9ff;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: .5px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      font-size: clamp(34px, 6vw, 58px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      text-wrap: balance;
+    }
+
+    .hero h1 .hl {
+      color: #ffd23f;
+    }
+
+    .hero p.lead {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #c8d8f5;
+      max-width: 540px;
+    }
+
+    .hero-actions {
+      margin-top: 32px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 14px 26px;
+      border-radius: 999px;
+      transition: transform .15s, background .2s, box-shadow .2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: #ffd23f;
+      color: #1a2540;
+      box-shadow: 0 12px 30px rgba(255, 210, 63, .35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      background: #ffdd66;
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.18);
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .hero-stats .stat .num {
+      font-size: 30px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .hero-stats .stat .lbl {
+      font-size: 13px;
+      color: #aebfe0;
+      letter-spacing: .3px;
+    }
+
+    .hero-visual {
+      position: relative;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: #0a224f;
+    }
+
+    .hero-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ---------- Feature strip ---------- */
+    .features {
+      background: var(--white);
+    }
+
+    .feature-grid {
+      display: grid;
+      gap: 22px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 640px) {
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 980px) {
+      .feature-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .feature {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 22px;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .feature:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .feature .ico {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--blue-100);
+      color: var(--blue-700);
+      margin-bottom: 16px;
+    }
+
+    .feature h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--blue-900);
+      margin-bottom: 6px;
+    }
+
+    .feature p {
+      font-size: 14.5px;
+      color: var(--muted);
+    }
+
+    /* ---------- Courses ---------- */
+    .courses {
+      background: var(--bg);
+    }
+
+    .group-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 44px 0 24px;
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--blue-900);
+    }
+
+    .group-label .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--blue-600);
+    }
+
+    .group-label.auto .dot {
+      background: var(--green);
+    }
+
+    .group-label .line {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .course-grid {
+      display: grid;
+      gap: 26px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 700px) {
+      .course-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1000px) {
+      .course-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .course-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .course-thumb {
+      position: relative;
+      cursor: pointer;
+      background: #0b1f44;
+      overflow: hidden;
+      aspect-ratio: 16 / 11;
+    }
+
+    .course-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transition: transform .4s;
+    }
+
+    .course-card:hover .course-thumb img {
+      transform: scale(1.04);
+    }
+
+    .course-thumb .view-pill {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(11, 31, 68, 0.85);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(4px);
+    }
+
+    .badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      padding: 5px 11px;
+      border-radius: 999px;
+      color: #fff;
+    }
+
+    .badge.manual {
+      background: var(--blue-600);
+    }
+
+    .badge.auto {
+      background: var(--green);
+    }
+
+    .course-body {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .course-body h3 {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--blue-900);
+      line-height: 1.25;
+    }
+
+    .course-body .desc {
+      margin-top: 8px;
+      font-size: 14.5px;
+      color: var(--muted);
+    }
+
+    .course-body ul {
+      list-style: none;
+      margin: 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .course-body li {
+      font-size: 14px;
+      color: var(--ink);
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+    }
+
+    .course-body li svg {
+      flex-shrink: 0;
+      margin-top: 3px;
+      color: var(--green);
+    }
+
+    .course-foot {
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .price {
+      line-height: 1.1;
+    }
+
+    .price .from {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .price .val {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--blue-700);
+    }
+
+    .price .val span {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .btn-sm {
+      background: var(--blue-100);
+      color: var(--blue-700);
+      font-weight: 700;
+      font-size: 14px;
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+
+    .btn-sm:hover {
+      background: var(--blue-600);
+      color: #fff;
+    }
+
+    /* ---------- Pricing table ---------- */
+    .pricing {
+      background: var(--white);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    table.pricing-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      background: #fff;
+    }
+
+    .pricing-table thead th {
+      background: var(--blue-900);
+      color: #fff;
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: .3px;
+      padding: 16px 14px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .pricing-table thead th:first-child {
+      text-align: left;
+    }
+
+    .pricing-table thead th .small {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: #aebfe0;
+      margin-top: 3px;
+    }
+
+    .pricing-table thead th.reco {
+      background: var(--blue-600);
+      position: relative;
+    }
+
+    .pricing-table thead th.reco .small {
+      color: #ffd23f;
+      font-weight: 700;
+    }
+
+    .group-row td {
+      background: var(--blue-100);
+      color: var(--blue-800);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      padding: 10px 14px;
+    }
+
+    .group-row.auto td {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .pricing-table tbody td {
+      padding: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .pricing-table tbody td:first-child {
+      text-align: left;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .pricing-table tbody td.reco {
+      font-weight: 800;
+      color: var(--blue-700);
+      background: #f4f8ff;
+      font-size: 17px;
+    }
+
+    .group-row.auto+tr td.reco,
+    .auto-price {
+      color: var(--green) !important;
+    }
+
+    .note {
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--blue-100);
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 14.5px;
+      color: var(--blue-800);
+    }
+
+    .note svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Interview prep */
+    .interview {
+      margin-top: 30px;
+      display: grid;
+      gap: 18px;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 760px) {
+      .interview {
+        grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      }
+    }
+
+    .iv-head {
+      background: linear-gradient(135deg, var(--blue-800), var(--blue-600));
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .iv-head .t {
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    .iv-head .s {
+      font-size: 13px;
+      color: #cfe0ff;
+      margin-top: 4px;
+    }
+
+    .iv-card {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .iv-card .lvl {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .iv-card .pr {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--blue-700);
+      margin-top: 6px;
+    }
+
+    /* ---------- Process ---------- */
+    .process {
+      background: var(--bg);
+    }
+
+    .steps {
+      display: grid;
+      gap: 22px;
+      grid-template-columns: 1fr;
+      counter-reset: step;
+    }
+
+    @media (min-width: 700px) {
+      .steps {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1000px) {
+      .steps {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .step {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 22px;
+      position: relative;
+    }
+
+    .step .n {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--blue-900);
+      color: #fff;
+      font-weight: 800;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .step h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--blue-900);
+    }
+
+    .step p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ---------- CTA / Contact ---------- */
+    .cta {
+      background: radial-gradient(900px 400px at 20% 0%, #1d63d8 0%, transparent 55%),
+        linear-gradient(160deg, var(--blue-900), var(--blue-800));
+      color: #fff;
+    }
+
+    .cta-inner {
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 800;
+      text-wrap: balance;
+    }
+
+    .cta p {
+      color: #c8d8f5;
+      font-size: 17px;
+      margin-top: 14px;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .contact-grid {
+      margin-top: 36px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px 28px;
+      border-radius: 14px;
+      transition: transform .15s, box-shadow .2s;
+      background: #fff;
+      color: #0f172a;
+    }
+
+    .contact-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .contact-btn .ci {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .ci.fb {
+      background: #1877f2;
+    }
+
+    .ci.tt {
+      background: #000;
+    }
+
+    .ci.yt {
+      background: #ff0000;
+    }
+
+    .contact-btn .ct {
+      line-height: 1.15;
+      text-align: left;
+    }
+
+    .contact-btn .ct small {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    /* ---------- Footer ---------- */
+    footer {
+      background: #081a3d;
+      color: #b9c8e6;
+      padding: 40px 0;
+    }
+
+    .foot-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .foot-inner .brand-name {
+      color: #fff;
+    }
+
+    .foot-inner .brand-name span {
+      color: #8fa6d4;
+    }
+
+    .foot-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .foot-links a:hover {
+      color: #fff;
+    }
+
+    .foot-copy {
+      font-size: 13px;
+      color: #6f84ad;
+    }
+
+    /* ---------- Lightbox ---------- */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(6, 17, 40, 0.92);
+      display: none;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 30px 16px;
+      overflow-y: auto;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 760px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .lightbox .close {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox .close:hover {
+      background: rgba(255, 255, 255, 0.26);
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== NAV ===== -->
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="#top" class="brand">
+        <div class="brand-mark">ĐG</div>
+        <div class="brand-name">ĐỨC GIANG<span>TESTER EDUCATION</span></div>
+      </a>
+      <nav class="nav-links">
+        <a href="#courses">Khóa học</a>
+        <a href="#pricing">Học phí</a>
+        <a href="#process">Lộ trình</a>
+        <a href="#why">Vì sao chọn</a>
+      </nav>
+      <a href="#contact" class="nav-cta">Đăng ký tư vấn</a>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="top">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <span class="tag">🎯 Học đúng thứ Tester cần • Thực hành là chính</span>
+        <h1>Trở thành <span class="hl">QA / Tester</span> chuyên nghiệp từ con số 0</h1>
+        <p class="lead">
+          ĐỨC GIANG TESTER EDUCATION đào tạo từ Kiểm thử Manual đến Automation theo hướng
+          thực chiến 100% — đủ kỹ năng tự tin đi làm ngay sau khóa học.
+        </p>
+        <div class="hero-actions">
+          <a href="#courses" class="btn btn-primary">Xem các khóa học</a>
+          <a href="#contact" class="btn btn-ghost">Nhận tư vấn miễn phí</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="num">7+</div>
+            <div class="lbl">Khóa học chuyên sâu</div>
+          </div>
+          <div class="stat">
+            <div class="num">100%</div>
+            <div class="lbl">Thực hành thực chiến</div>
+          </div>
+          <div class="stat">
+            <div class="num">1-1</div>
+            <div class="lbl">Có lớp dạy kèm riêng</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Beginner-4AOAJzusAXJJ6W7ngRHHBCjIaHPUZs.png"
+          alt="Khóa học Kiểm thử phần mềm Manual - bước đầu vào nghề QA" loading="eager" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="section features" id="why">
+    <div class="container">
+      <div class="center">
+        <span class="eyebrow">Vì sao chọn chúng tôi</span>
+        <h2 class="section-title">Đào tạo Tester theo hướng thực chiến</h2>
+        <p class="section-sub">Lộ trình bài bản, học đến đâu làm được đến đó, đúng quy trình làm việc tại doanh nghiệp.
+        </p>
+      </div>
+      <div class="feature-grid" style="margin-top:42px;">
+        <div class="feature">
+          <div class="ico">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 7l10-5 10 5-10 5L2 7z" />
+              <path d="M6 9v5c0 1 2.5 3 6 3s6-2 6-3V9" />
+            </svg>
+          </div>
+          <h3>Học thực chiến 100%</h3>
+          <p>Mỗi buổi học gắn với bài tập và dự án thực tế, không lan man lý thuyết.</p>
+        </div>
+        <div class="feature">
+          <div class="ico">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+            </svg>
+          </div>
+          <h3>Nhiều hình thức học</h3>
+          <p>Video record, lớp nhóm 2-3 người hoặc dạy kèm 1-1 tùy nhu cầu của bạn.</p>
+        </div>
+        <div class="feature">
+          <div class="ico">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6" />
+              <path d="m9 15 2 2 4-4" />
+            </svg>
+          </div>
+          <h3>Hỗ trợ trọn khóa</h3>
+          <p>Tài liệu, bài tập và hỗ trợ giải đáp xuyên suốt quá trình học.</p>
+        </div>
+        <div class="feature">
+          <div class="ico">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v4" />
+              <path d="m6.34 6.34 2.83 2.83" />
+              <path d="M2 12h4" />
+              <circle cx="12" cy="14" r="6" />
+            </svg>
+          </div>
+          <h3>Sẵn sàng đi làm</h3>
+          <p>Có lớp ôn tập phỏng vấn, hướng dẫn làm CV theo từng level từ Fresher đến Senior.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COURSES ===== -->
+  <section class="section courses" id="courses">
+    <div class="container">
+      <div class="center">
+        <span class="eyebrow">Chương trình đào tạo</span>
+        <h2 class="section-title">Các khóa học tại trung tâm</h2>
+        <p class="section-sub">Bấm vào ảnh từng khóa để xem chi tiết nội dung chương trình đầy đủ.</p>
+      </div>
+
+      <!-- MANUAL GROUP -->
+      <div class="group-label">
+        <span class="dot"></span> NHÓM MANUAL <span class="line"></span>
+      </div>
+      <div class="course-grid">
+
+        <article class="course-card">
+          <div class="course-thumb"
+            data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Beginner-4AOAJzusAXJJ6W7ngRHHBCjIaHPUZs.png">
+            <span class="badge manual">Người mới</span>
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Beginner-4AOAJzusAXJJ6W7ngRHHBCjIaHPUZs.png"
+              alt="Khóa học Kiểm thử phần mềm Manual cho người mới" loading="lazy" />
+            <span class="view-pill">🔍 Xem chi tiết</span>
+          </div>
+          <div class="course-body">
+            <h3>Kiểm thử phần mềm Manual</h3>
+            <p class="desc">Bước đầu vững chắc vào nghề QA cho người chưa có nền tảng lập trình.</p>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Nền tảng kiểm thử, SDLC & STLC</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Phân tích & viết testcase thực tế</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Quy trình Agile/Scrum, log bug Jira</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> SQL, API & chuẩn bị đi làm</li>
+            </ul>
+            <div class="course-foot">
+              <div class="price">
+                <div class="from">Học phí từ</div>
+                <div class="val">1.200k <span>/ video</span></div>
+              </div>
+              <button class="btn-sm"
+                data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Beginner-4AOAJzusAXJJ6W7ngRHHBCjIaHPUZs.png">Xem
+                chi tiết</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="course-card">
+          <div class="course-thumb"
+            data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/API%20manual-6JzbyGujZX9TsOfchak98WJMjF08h8.png">
+            <span class="badge manual">API Testing</span>
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/API%20manual-6JzbyGujZX9TsOfchak98WJMjF08h8.png"
+              alt="Khóa học Kiểm thử API với Postman & RESTful API cho Tester" loading="lazy" />
+            <span class="view-pill">🔍 Xem chi tiết</span>
+          </div>
+          <div class="course-body">
+            <h3>Kiểm thử API – Postman & RESTful API</h3>
+            <p class="desc">Kỹ năng bắt buộc với mọi QA hiện đại: phát hiện lỗi sớm, độc lập với giao diện.</p>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Nền tảng RESTful API, HTTP, Status Code</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Phân tích & viết testcase API</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Kiểm thử tích hợp UI – Backend</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Postman thực chiến, data-driven test</li>
+            </ul>
+            <div class="course-foot">
+              <div class="price">
+                <div class="from">Học phí từ</div>
+                <div class="val">1.000k <span>/ video</span></div>
+              </div>
+              <button class="btn-sm"
+                data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/API%20manual-6JzbyGujZX9TsOfchak98WJMjF08h8.png">Xem
+                chi tiết</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="course-card">
+          <div class="course-thumb"
+            data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sql%20c%C6%A1%20b%E1%BA%A3n-n5FLG0VnndCcvZBLxHp2w5CIqTYwDN.png">
+            <span class="badge manual">SQL</span>
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sql%20c%C6%A1%20b%E1%BA%A3n-n5FLG0VnndCcvZBLxHp2w5CIqTYwDN.png"
+              alt="Khóa học SQL dành cho Tester" loading="lazy" />
+            <span class="view-pill">🔍 Xem chi tiết</span>
+          </div>
+          <div class="course-body">
+            <h3>SQL dành cho Tester</h3>
+            <p class="desc">Một QA biết SQL là một QA khác biệt — kiểm tra dữ liệu trực tiếp trong database.</p>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Nền tảng CSDL, cài đặt SQL Server</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> SELECT, INSERT, UPDATE, DELETE, JOIN</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Thực hành tổng hợp với CSDL thực tế</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Ứng dụng SQL vào công việc QA (có lớp nâng cao)</li>
+            </ul>
+            <div class="course-foot">
+              <div class="price">
+                <div class="from">Học phí từ</div>
+                <div class="val">650k <span>/ video</span></div>
+              </div>
+              <button class="btn-sm"
+                data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sql%20c%C6%A1%20b%E1%BA%A3n-n5FLG0VnndCcvZBLxHp2w5CIqTYwDN.png">Xem
+                chi tiết</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="course-card">
+          <div class="course-body"
+            style="justify-content:center; gap:14px; background:linear-gradient(160deg,#0b2a6b,#1551b5); color:#fff; min-height:280px;">
+            <h3 style="color:#fff; font-size:22px;">Khóa Testcase chuyên sâu</h3>
+            <p class="desc" style="color:#cfe0ff;">Tập trung rèn kỹ năng phân tích yêu cầu và viết testcase chuẩn dự án
+              — kỹ năng cốt lõi của mọi Tester.</p>
+            <ul>
+              <li style="color:#eaf1ff;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7ee0a0"
+                  stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Phân tích màn hình, đọc tài liệu SRS</li>
+              <li style="color:#eaf1ff;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7ee0a0"
+                  stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Testcase common UI & function</li>
+              <li style="color:#eaf1ff;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7ee0a0"
+                  stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Thực hành viết testcase thực tế</li>
+            </ul>
+            <div class="course-foot" style="border-top-color:rgba(255,255,255,0.18);">
+              <div class="price">
+                <div class="from" style="color:#aebfe0;">Học phí từ</div>
+                <div class="val" style="color:#ffd23f;">500k <span style="color:#aebfe0;">/ video</span></div>
+              </div>
+              <a href="#contact" class="btn-sm" style="background:#ffd23f; color:#1a2540;">Tư vấn lộ trình</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- AUTOMATION GROUP -->
+      <div class="group-label auto">
+        <span class="dot"></span> NHÓM AUTOMATION <span class="line"></span>
+      </div>
+      <div class="course-grid">
+
+        <article class="course-card">
+          <div class="course-thumb"
+            data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/API%20automation%20with%20postman-o8IhUArzd1cWuhjpMXWYTbq9ricC06.png">
+            <span class="badge auto">Postman + CI/CD</span>
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/API%20automation%20with%20postman-o8IhUArzd1cWuhjpMXWYTbq9ricC06.png"
+              alt="Khóa học API Automation Testing Postman nâng cao và CI/CD" loading="lazy" />
+            <span class="view-pill">🔍 Xem chi tiết</span>
+          </div>
+          <div class="course-body">
+            <h3>API Automation – Postman & CI/CD</h3>
+            <p class="desc">Nâng kỹ năng API lên cấp độ Automation Engineer chuẩn doanh nghiệp.</p>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Scripting & API automation trong Postman</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Chạy test & report v���i Newman</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Tích hợp GitHub, làm việc nhóm</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> CI/CD với Jenkins, automation tự động</li>
+            </ul>
+            <div class="course-foot">
+              <div class="price">
+                <div class="from">Học phí từ</div>
+                <div class="val auto-price">2.000k <span>/ video</span></div>
+              </div>
+              <button class="btn-sm"
+                data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/API%20automation%20with%20postman-o8IhUArzd1cWuhjpMXWYTbq9ricC06.png">Xem
+                chi tiết</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="course-card">
+          <div class="course-thumb"
+            data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Katalon%20Studio-B1TPW22vMToW8XYyPXkbXmopRbC353.png">
+            <span class="badge auto">Katalon</span>
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Katalon%20Studio-B1TPW22vMToW8XYyPXkbXmopRbC353.png"
+              alt="Khóa học Automation web với Katalon Studio" loading="lazy" />
+            <span class="view-pill">🔍 Xem chi tiết</span>
+          </div>
+          <div class="course-body">
+            <h3>Automation web với Katalon Studio</h3>
+            <p class="desc">Automation không rào cản — phù hợp người chưa vững lập trình, bắt đầu nhanh.</p>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Làm quen & cấu hình Katalon Studio</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Xác định web elements, xử lý UI</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Groovy cơ bản cho automation</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Tổ chức code & thực hành project</li>
+            </ul>
+            <div class="course-foot">
+              <div class="price">
+                <div class="from">Học phí từ</div>
+                <div class="val auto-price">2.000k <span>/ video</span></div>
+              </div>
+              <button class="btn-sm"
+                data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Katalon%20Studio-B1TPW22vMToW8XYyPXkbXmopRbC353.png">Xem
+                chi tiết</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="course-card">
+          <div class="course-thumb"
+            data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Selenium%20Java-HYnyGyHJaXM07Wm6QrB6i0JUrgVufX.png">
+            <span class="badge auto">Selenium</span>
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Selenium%20Java-HYnyGyHJaXM07Wm6QrB6i0JUrgVufX.png"
+              alt="Khóa học Selenium với Java" loading="lazy" />
+            <span class="view-pill">🔍 Xem chi tiết</span>
+          </div>
+          <div class="course-body">
+            <h3>Selenium với Java</h3>
+            <p class="desc">Bộ đôi kinh điển được dùng rộng rãi nhất trong ngành QA Automation.</p>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Java nền tảng: cú pháp, OOP, nâng cao</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Locator strategy, xử lý elements</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Selenium nâng cao, Wait, xử lý ngoại lệ</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> TestNG & Page Object Model</li>
+            </ul>
+            <div class="course-foot">
+              <div class="price">
+                <div class="from">Học phí từ</div>
+                <div class="val auto-price">3.000k <span>/ video</span></div>
+              </div>
+              <button class="btn-sm"
+                data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Selenium%20Java-HYnyGyHJaXM07Wm6QrB6i0JUrgVufX.png">Xem
+                chi tiết</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="course-card">
+          <div class="course-thumb"
+            data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Playwright%20TypeScript-WvuwjkO8PvUIIFoQ5PA26m7JnPBsbJ.png">
+            <span class="badge auto">Playwright</span>
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Playwright%20TypeScript-WvuwjkO8PvUIIFoQ5PA26m7JnPBsbJ.png"
+              alt="Khóa học Playwright với TypeScript" loading="lazy" />
+            <span class="view-pill">🔍 Xem chi tiết</span>
+          </div>
+          <div class="course-body">
+            <h3>Playwright với TypeScript</h3>
+            <p class="desc">Framework automation thế hệ mới của Microsoft — test chắc chắn, ít bug, dễ maintain.</p>
+            <ul>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> TypeScript nền tảng cho automation</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Locator strategy & xử lý thành phần UI</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Data-driven, Hooks & Page Object Model</li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <path d="m5 12 5 5L20 7" />
+                </svg> Report & debug với Trace Viewer</li>
+            </ul>
+            <div class="course-foot">
+              <div class="price">
+                <div class="from">Học phí từ</div>
+                <div class="val auto-price">2.500k <span>/ video</span></div>
+              </div>
+              <button class="btn-sm"
+                data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Playwright%20TypeScript-WvuwjkO8PvUIIFoQ5PA26m7JnPBsbJ.png">Xem
+                chi tiết</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRICING ===== -->
+  <section class="section pricing" id="pricing">
+    <div class="container">
+      <div class="center">
+        <span class="eyebrow">Bảng học phí</span>
+        <h2 class="section-title">Chọn khóa học phù hợp với nhu cầu của bạn</h2>
+        <p class="section-sub">Đơn vị: nghìn đồng (k). Học qua video record là hình thức được khuyến nghị và tiết kiệm
+          nhất.</p>
+      </div>
+
+      <div class="table-wrap" style="margin-top:38px;">
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>Khóa học</th>
+              <th class="reco">Học qua Video Record<span class="small">★ Khuyến nghị</span></th>
+              <th>Nhóm 3 người<span class="small">/ người</span></th>
+              <th>Nhóm 2 người<span class="small">/ người</span></th>
+              <th>Dạy kèm 1-1<span class="small">/ người</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="group-row">
+              <td colspan="5">Manual</td>
+            </tr>
+            <tr>
+              <td>Kiểm thử phần mềm cho người mới (Beginner)</td>
+              <td class="reco">1.200k</td>
+              <td>3.000k</td>
+              <td>4.500k</td>
+              <td>6.000k</td>
+            </tr>
+            <tr>
+              <td>API testing cơ bản tới nâng cao</td>
+              <td class="reco">800k</td>
+              <td>2.000k</td>
+              <td>3.000k</td>
+              <td>4.000k</td>
+            </tr>
+            <tr>
+              <td>SQL cơ bản</td>
+              <td class="reco">600k</td>
+              <td>2.000k</td>
+              <td>2.500k</td>
+              <td>3.000k</td>
+            </tr>
+            <tr>
+              <td>SQL nâng cao</td>
+              <td class="reco">800k</td>
+              <td>2.500k</td>
+              <td>3.000k</td>
+              <td>4.000k</td>
+            </tr>
+            <tr>
+              <td>Testcase</td>
+              <td class="reco">500k</td>
+              <td>1.000k</td>
+              <td>1.500k</td>
+              <td>2.000k</td>
+            </tr>
+
+            <tr class="group-row auto">
+              <td colspan="5">Automation</td>
+            </tr>
+            <tr>
+              <td>Auto API testing với Postman & Newman, tích hợp CI/CD</td>
+              <td class="reco">1.200k</td>
+              <td>4.500k</td>
+              <td>6.000k</td>
+              <td>8.000k</td>
+            </tr>
+            <tr>
+              <td>Auto web với Katalon Studio</td>
+              <td class="reco">1.500k</td>
+              <td>5.000k</td>
+              <td>7.000k</td>
+              <td>9.000k</td>
+            </tr>
+            <tr>
+              <td>Auto web với Selenium Webdriver Java</td>
+              <td class="reco">2.000k</td>
+              <td>6.000k</td>
+              <td>8.000k</td>
+              <td>10.000k</td>
+            </tr>
+            <tr>
+              <td>Auto web với Playwright TypeScript</td>
+              <td class="reco">2.000k</td>
+              <td>6.000k</td>
+              <td>8.000k</td>
+              <td>10.000k</td>
+            </tr>
+            <tr>
+              <td>Kiểm thử hiệu năng với Jmeter</td>
+              <td class="reco">600k</td>
+              <td>updating</td>
+              <td>updating</td>
+              <td>updating</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Interview prep -->
+      <div class="interview">
+        <div class="iv-head">
+          <div class="t">Ôn tập phỏng vấn (kèm 1-1)</div>
+          <div class="s">Hướng dẫn làm CV, luyện trả lời phỏng vấn theo từng cấp độ.</div>
+        </div>
+        <div class="iv-card">
+          <div class="lvl">Intern / Fresher</div>
+          <div class="pr">1.000k</div>
+        </div>
+        <div class="iv-card">
+          <div class="lvl">Junior / Middle</div>
+          <div class="pr">1.500k</div>
+        </div>
+        <div class="iv-card">
+          <div class="lvl">Senior</div>
+          <div class="pr">2.000k</div>
+        </div>
+      </div>
+
+      <div class="note">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        </svg>
+        <span><strong>Lưu ý:</strong> Học phí trên đã bao gồm tài liệu, bài tập thực hành và hỗ trợ trong suốt quá trình
+          học.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROCESS ===== -->
+  <section class="section process" id="process">
+    <div class="container">
+      <div class="center">
+        <span class="eyebrow">Lộ trình học</span>
+        <h2 class="section-title">4 bước để đi làm Tester</h2>
+        <p class="section-sub">Bạn có thể bắt đầu từ bất kỳ đâu phù hợp với mục tiêu nghề nghiệp của mình.</p>
+      </div>
+      <div class="steps" style="margin-top:42px;">
+        <div class="step">
+          <div class="n">1</div>
+          <h3>Nền tảng Manual</h3>
+          <p>Quy trình kiểm thử, viết testcase, log bug với Jira.</p>
+        </div>
+        <div class="step">
+          <div class="n">2</div>
+          <h3>Kỹ năng kỹ thuật</h3>
+          <p>SQL kiểm tra dữ liệu và API testing với Postman.</p>
+        </div>
+        <div class="step">
+          <div class="n">3</div>
+          <h3>Automation</h3>
+          <p>Chọn Katalon, Selenium Java, Playwright hoặc Postman CI/CD.</p>
+        </div>
+        <div class="step">
+          <div class="n">4</div>
+          <h3>Sẵn sàng đi làm</h3>
+          <p>Hoàn thiện CV và ôn tập phỏng vấn theo từng level.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA / CONTACT ===== -->
+  <section class="section cta" id="contact">
+    <div class="container cta-inner">
+      <span class="eyebrow" style="background:rgba(255,255,255,0.12); color:#dbe9ff;">Đăng ký tư vấn</span>
+      <h2>Sẵn sàng bắt đầu hành trình Tester của bạn?</h2>
+      <p>Nhắn cho chúng tôi qua Facebook hoặc TikTok để được tư vấn lộ trình học phù hợp và nhận ưu đãi học phí mới
+        nhất.</p>
+      <div class="contact-grid">
+        <!-- TODO: Thay href="#" bằng link Facebook thật của bạn -->
+        <a href="https://www.facebook.com/ducgiangtestereducation" target="_blank" rel="noopener" class="contact-btn">
+          <span class="ci fb"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z" />
+            </svg></span>
+          <span class="ct">Fanpage<small>Nhắn tin tư vấn</small></span>
+        </a>
+         <!-- TODO: Thay href="#" bằng link Facebook thật của bạn -->
+        <a href="https://www.facebook.com/ducgiangtester/" target="_blank" rel="noopener" class="contact-btn">
+          <span class="ci fb"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z" />
+            </svg></span>
+          <span class="ct">Facebook<small>Đăng ký ngay</small></span>
+        </a>
+        <!-- TODO: Thay href="#" bằng link TikTok thật của bạn -->
+        <a href="https://www.tiktok.com/@ducgiangtestereducation" target="_blank" rel="noopener" class="contact-btn">
+          <span class="ci tt"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M16.5 3a5.6 5.6 0 0 0 4.5 4.6v3a8.6 8.6 0 0 1-4.5-1.3v6.4a6.2 6.2 0 1 1-6.2-6.2c.3 0 .7 0 1 .1v3.1a3.1 3.1 0 1 0 2.2 3V3h3z" />
+            </svg></span>
+          <span class="ct">TikTok<small>Theo dõi & xem video</small></span>
+        </a>
+
+        <!-- TODO: Thay href="#" bằng link youtube thật của bạn -->
+        <a href="https://www.youtube.com/@DucGiangTesterEducation" target="_blank" rel="noopener" class="contact-btn">
+          <span class="ci yt"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z" />
+            </svg></span>
+          <span class="ct">YouTube<small>Khóa học miễn phí</small></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <div class="container foot-inner">
+      <div class="brand-name" style="text-align:center;">ĐỨC GIANG TESTER EDUCATION<span>Đào tạo QA / Tester thực
+          chiến</span></div>
+      <div class="foot-links">
+        <a href="#courses">Khóa học</a>
+        <a href="#pricing">Học phí</a>
+        <a href="#process">Lộ trình</a>
+        <a href="#contact">Liên hệ</a>
+      </div>
+      <div class="foot-copy">© 2026 ĐỨC GIANG TESTER EDUCATION. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <!-- ===== LIGHTBOX ===== -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Xem chi tiết khóa học">
+    <button class="close" id="lbClose" aria-label="Đóng">&times;</button>
+    <img id="lbImg" src="" alt="Chi tiết nội dung khóa học" />
+  </div>
+
+  <script>
+    (function () {
+      var lb = document.getElementById('lightbox');
+      var lbImg = document.getElementById('lbImg');
+      var lbClose = document.getElementById('lbClose');
+
+      function open(src) {
+        lbImg.src = src;
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+      function close() {
+        lb.classList.remove('open');
+        lbImg.src = '';
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('[data-img]').forEach(function (el) {
+        el.addEventListener('click', function () {
+          var src = el.getAttribute('data-img');
+          if (src) open(src);
+        });
+      });
+
+      lbClose.addEventListener('click', close);
+      lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    })();
+  </script>
+</body>
+
+</html>
