@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Playwright Practice</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-logo">
+      <h1>🎭 PW Practice</h1>
+      <p>Playwright Automation Practice Site</p>
+    </div>
+
+    <div class="login-alert" id="login-alert" data-testid="login-error"></div>
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Enter username"
+             data-testid="input-username" autocomplete="off">
+      <div class="error-msg" id="err-username" data-testid="error-username">Username is required</div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password"
+             data-testid="input-password">
+      <div class="error-msg" id="err-password" data-testid="error-password">Password is required</div>
+    </div>
+
+    <button class="btn btn-primary btn-login" id="btn-login" data-testid="btn-login" onclick="doLogin()">
+      Login
+    </button>
+
+    <div class="login-hint">
+      <strong style="color:var(--text2)">Test accounts:</strong><br>
+      admin / 123456 &nbsp;|&nbsp; tester / abc123
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+  // Redirect if already logged in
+  if (isLoggedIn()) window.location.href = 'pages/home.html';
+
+  function doLogin() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    let valid = true;
+
+    // Clear errors
+    document.getElementById('err-username').classList.remove('show');
+    document.getElementById('err-password').classList.remove('show');
+    document.getElementById('username').classList.remove('error');
+    document.getElementById('password').classList.remove('error');
+    document.getElementById('login-alert').classList.remove('show');
+
+    if (!username) {
+      document.getElementById('err-username').classList.add('show');
+      document.getElementById('username').classList.add('error');
+      valid = false;
+    }
+    if (!password) {
+      document.getElementById('err-password').classList.add('show');
+      document.getElementById('password').classList.add('error');
+      valid = false;
+    }
+    if (!valid) return;
+
+    const user = VALID_USERS.find(u => u.username === username && u.password === password);
+    if (!user) {
+      document.getElementById('login-alert').textContent = 'Invalid username or password. Please try again.';
+      document.getElementById('login-alert').classList.add('show');
+      return;
+    }
+
+    sessionStorage.setItem('pw_user', JSON.stringify(user));
+    window.location.href = 'pages/home.html';
+  }
+
+  // Enter key support
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>

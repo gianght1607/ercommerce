@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scroll — Playwright Practice</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/auth.js"></script>
+<script>requireLogin(); document.write(renderNav('scroll.html'));</script>
+
+<div class="page-wrap">
+  <div class="page-title">Scroll Practice</div>
+  <div class="page-subtitle">Scroll page · Scroll to element · Scroll inside container</div>
+
+  <div class="section">
+    <div class="section-title">Scroll to Element</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">
+      Playwright: <code style="color:var(--accent2)">await page.locator('#target-el').scrollIntoViewIfNeeded()</code>
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm" data-testid="btn-scroll-top" onclick="scrollToEl('scroll-top-target')">Scroll to Top Marker</button>
+      <button class="btn btn-primary btn-sm" data-testid="btn-scroll-middle" onclick="scrollToEl('scroll-middle-target')">Scroll to Middle</button>
+      <button class="btn btn-primary btn-sm" data-testid="btn-scroll-bottom" onclick="scrollToEl('scroll-bottom-target')">Scroll to Bottom</button>
+    </div>
+  </div>
+
+  <!-- TOP TARGET -->
+  <div id="scroll-top-target" data-testid="scroll-top-target"
+       style="background:var(--accent-dim);border:2px solid var(--accent);border-radius:10px;padding:20px;text-align:center;margin:16px 0">
+    📍 TOP MARKER — <code>id="scroll-top-target"</code>
+  </div>
+
+  <!-- LONG CONTENT -->
+  <div class="section">
+    <div class="section-title">Long Page Content (scroll down)</div>
+    <div id="long-content">
+      <!-- Items 1-10 -->
+    </div>
+  </div>
+
+  <!-- MIDDLE TARGET -->
+  <div id="scroll-middle-target" data-testid="scroll-middle-target"
+       style="background:rgba(34,197,94,.1);border:2px solid var(--green);border-radius:10px;padding:20px;text-align:center;margin:16px 0">
+    📍 MIDDLE MARKER — <code>id="scroll-middle-target"</code>
+  </div>
+
+  <div class="section">
+    <div class="section-title">More Content</div>
+    <div id="more-content"></div>
+  </div>
+
+  <!-- SCROLL INSIDE CONTAINER -->
+  <div class="section">
+    <div class="section-title">Scroll Inside Container</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">
+      Playwright: <code style="color:var(--accent2)">await page.locator('#scroll-container').evaluate(el => el.scrollTop = 300)</code>
+    </p>
+    <div class="scroll-content" id="scroll-container" data-testid="scroll-container">
+      <!-- Items inside -->
+    </div>
+  </div>
+
+  <!-- HORIZONTAL SCROLL -->
+  <div class="section">
+    <div class="section-title">Horizontal Scroll</div>
+    <div id="h-scroll" data-testid="h-scroll"
+         style="overflow-x:auto;white-space:nowrap;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:16px">
+      <div style="display:inline-flex;gap:12px">
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM TARGET -->
+  <div id="scroll-bottom-target" data-testid="scroll-bottom-target"
+       style="background:rgba(245,158,11,.1);border:2px solid var(--yellow);border-radius:10px;padding:20px;text-align:center;margin:16px 0">
+    📍 BOTTOM MARKER — <code>id="scroll-bottom-target"</code>
+  </div>
+
+  <div style="height:200px"></div>
+</div>
+
+<script>
+function scrollToEl(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Generate long content
+const lc = document.getElementById('long-content');
+for (let i = 1; i <= 8; i++) {
+  lc.innerHTML += `<div class="scroll-item" data-testid="long-item-${i}">
+    <strong>Item ${i}</strong>
+    <p style="color:var(--text2);font-size:13px;margin-top:4px">
+      This is content item ${i}. Scroll down to see more items and find the Middle Marker below.
+    </p>
+  </div>`;
+}
+const mc = document.getElementById('more-content');
+for (let i = 9; i <= 16; i++) {
+  mc.innerHTML += `<div class="scroll-item" data-testid="long-item-${i}">
+    <strong>Item ${i}</strong>
+    <p style="color:var(--text2);font-size:13px;margin-top:4px">More content below the Middle Marker.</p>
+  </div>`;
+}
+
+// Container scroll content
+const sc = document.getElementById('scroll-container');
+for (let i = 1; i <= 20; i++) {
+  sc.innerHTML += `<div class="scroll-item" data-testid="container-item-${i}">
+    <strong>Container Item ${i}</strong> — scroll inside this box to find items
+  </div>`;
+}
+
+// Horizontal items
+const hw = document.querySelector('#h-scroll div');
+for (let i = 1; i <= 15; i++) {
+  hw.innerHTML += `<div data-testid="h-item-${i}" style="display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px 20px;min-width:140px;text-align:center;font-size:13px">
+    <div style="font-size:24px;margin-bottom:4px">${['📊','🎯','🔑','💡','🚀','⚡','🎭','🔍','📋','✅','🛡️','🔧','📦','🌟','🎪'][i-1]}</div>
+    Card ${i}
+  </div>`;
+}
+</script>
+</body>
+</html>

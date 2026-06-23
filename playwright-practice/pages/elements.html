@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elements — Playwright Practice</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/auth.js"></script>
+<script>requireLogin(); document.write(renderNav('elements.html'));</script>
+
+<div class="page-wrap">
+  <div class="page-title">Elements Practice</div>
+  <div class="page-subtitle">Textbox · Button · Checkbox · Radio · Dropdown · Custom Dropdown · Tooltip</div>
+
+  <!-- TEXTBOX -->
+  <div class="section">
+    <div class="section-title">Textbox & Input Types</div>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="txt-name">Full Name</label>
+          <input type="text" id="txt-name" data-testid="txt-name" placeholder="Enter full name">
+        </div>
+        <div class="form-group">
+          <label for="txt-email">Email</label>
+          <input type="email" id="txt-email" data-testid="txt-email" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="txt-number">Number</label>
+          <input type="number" id="txt-number" data-testid="txt-number" placeholder="Enter a number" min="0" max="100">
+        </div>
+        <div class="form-group">
+          <label for="txt-readonly">Readonly field</label>
+          <input type="text" id="txt-readonly" data-testid="txt-readonly" value="Cannot edit this" readonly style="opacity:.6">
+        </div>
+        <div class="form-group">
+          <label for="txt-disabled">Disabled field</label>
+          <input type="text" id="txt-disabled" data-testid="txt-disabled" value="Also disabled" disabled style="opacity:.4">
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="txt-password">Password</label>
+          <input type="password" id="txt-password" data-testid="txt-password" placeholder="Enter password">
+        </div>
+        <div class="form-group">
+          <label for="txt-search">Search</label>
+          <input type="search" id="txt-search" data-testid="txt-search" placeholder="Search something...">
+        </div>
+        <div class="form-group">
+          <label for="txt-area">Textarea</label>
+          <textarea id="txt-area" data-testid="txt-area" rows="4" placeholder="Enter multi-line text"></textarea>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btn-submit-form" data-testid="btn-submit-form" onclick="submitForm()">Submit Form</button>
+    <div class="result-box" id="form-result" data-testid="form-result">Fill in the form and click Submit</div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="section">
+    <div class="section-title">Buttons</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+      <button class="btn btn-primary" data-testid="btn-primary" onclick="showBtnResult('Primary clicked!')">Primary</button>
+      <button class="btn btn-secondary" data-testid="btn-secondary" onclick="showBtnResult('Secondary clicked!')">Secondary</button>
+      <button class="btn btn-success" data-testid="btn-success" onclick="showBtnResult('Success!')">Success</button>
+      <button class="btn btn-danger" data-testid="btn-danger" onclick="showBtnResult('Danger!')">Danger</button>
+      <button class="btn btn-warning" data-testid="btn-warning" onclick="showBtnResult('Warning!')">Warning</button>
+      <button class="btn btn-primary" disabled data-testid="btn-disabled">Disabled</button>
+    </div>
+    <div class="result-box" id="btn-result" data-testid="btn-result">Click a button to see result</div>
+  </div>
+
+  <!-- CHECKBOX -->
+  <div class="section">
+    <div class="section-title">Checkbox</div>
+    <div class="check-group">
+      <label class="check-item">
+        <input type="checkbox" id="chk-js" data-testid="chk-js" checked>
+        JavaScript
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="chk-ts" data-testid="chk-ts">
+        TypeScript
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="chk-python" data-testid="chk-python">
+        Python
+      </label>
+      <label class="check-item">
+        <input type="checkbox" id="chk-java" data-testid="chk-java" disabled>
+        Java (disabled)
+      </label>
+    </div>
+    <button class="btn btn-secondary btn-sm mt-12" data-testid="btn-get-checked" onclick="getChecked()">Get selected</button>
+    <div class="result-box" id="check-result" data-testid="check-result">Click "Get selected" to see checked items</div>
+  </div>
+
+  <!-- RADIO -->
+  <div class="section">
+    <div class="section-title">Radio Button</div>
+    <div class="radio-group">
+      <label class="radio-item">
+        <input type="radio" name="browser" id="radio-chrome" data-testid="radio-chrome" value="chrome">
+        Chrome
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="browser" id="radio-firefox" data-testid="radio-firefox" value="firefox">
+        Firefox
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="browser" id="radio-edge" data-testid="radio-edge" value="edge" checked>
+        Edge
+      </label>
+      <label class="radio-item">
+        <input type="radio" name="browser" id="radio-safari" data-testid="radio-safari" value="safari" disabled>
+        Safari (disabled)
+      </label>
+    </div>
+    <button class="btn btn-secondary btn-sm mt-12" data-testid="btn-get-radio" onclick="getRadio()">Get selected</button>
+    <div class="result-box" id="radio-result" data-testid="radio-result">Click "Get selected" to see radio value</div>
+  </div>
+
+  <!-- SELECT DROPDOWN -->
+  <div class="section">
+    <div class="section-title">Select Dropdown (native)</div>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label for="sel-country">Country</label>
+          <select id="sel-country" data-testid="sel-country" onchange="updateSelectResult()">
+            <option value="">-- Select country --</option>
+            <option value="vn">Vietnam</option>
+            <option value="us">United States</option>
+            <option value="jp">Japan</option>
+            <option value="sg">Singapore</option>
+            <option value="kr">South Korea</option>
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label for="sel-multi">Multi-select (hold Ctrl)</label>
+          <select id="sel-multi" data-testid="sel-multi" multiple size="5" onchange="updateSelectResult()">
+            <option value="playwright">Playwright</option>
+            <option value="selenium">Selenium</option>
+            <option value="cypress">Cypress</option>
+            <option value="appium">Appium</option>
+            <option value="jmeter">JMeter</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="result-box" id="select-result" data-testid="select-result">Change a dropdown to see result</div>
+  </div>
+
+  <!-- CUSTOM DROPDOWN -->
+  <div class="section">
+    <div class="section-title">Custom Dropdown</div>
+    <div class="row">
+      <div class="col">
+        <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">Programming Language</label>
+        <div class="custom-dropdown" id="dd-lang">
+          <div class="custom-dropdown-trigger" data-testid="dd-lang-trigger" onclick="toggleDropdown('dd-lang')">
+            <span id="dd-lang-value">Select language</span>
+            <span>▾</span>
+          </div>
+          <div class="custom-dropdown-menu" id="dd-lang-menu">
+            <div class="custom-dropdown-item" data-testid="dd-lang-js" onclick="selectDropdown('dd-lang','JavaScript')">JavaScript</div>
+            <div class="custom-dropdown-item" data-testid="dd-lang-ts" onclick="selectDropdown('dd-lang','TypeScript')">TypeScript</div>
+            <div class="custom-dropdown-item" data-testid="dd-lang-py" onclick="selectDropdown('dd-lang','Python')">Python</div>
+            <div class="custom-dropdown-item" data-testid="dd-lang-java" onclick="selectDropdown('dd-lang','Java')">Java</div>
+            <div class="custom-dropdown-item" data-testid="dd-lang-go" onclick="selectDropdown('dd-lang','Go')">Go</div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <label style="font-size:13px;color:var(--text2);display:block;margin-bottom:6px">Testing Framework</label>
+        <div class="custom-dropdown" id="dd-fw">
+          <div class="custom-dropdown-trigger" data-testid="dd-fw-trigger" onclick="toggleDropdown('dd-fw')">
+            <span id="dd-fw-value">Select framework</span>
+            <span>▾</span>
+          </div>
+          <div class="custom-dropdown-menu" id="dd-fw-menu">
+            <div class="custom-dropdown-item" onclick="selectDropdown('dd-fw','Playwright')">Playwright</div>
+            <div class="custom-dropdown-item" onclick="selectDropdown('dd-fw','Selenium')">Selenium</div>
+            <div class="custom-dropdown-item" onclick="selectDropdown('dd-fw','Cypress')">Cypress</div>
+            <div class="custom-dropdown-item" onclick="selectDropdown('dd-fw','WebdriverIO')">WebdriverIO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="result-box" id="custom-dd-result" data-testid="custom-dd-result">Select from dropdowns above</div>
+  </div>
+
+  <!-- TOOLTIP -->
+  <div class="section">
+    <div class="section-title">Tooltip (hover to see)</div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+      <div class="tooltip-wrap">
+        <button class="btn btn-secondary" data-testid="tooltip-info">ℹ️ Info</button>
+        <div class="tooltip-box" data-testid="tooltip-info-text">This is an info tooltip</div>
+      </div>
+      <div class="tooltip-wrap">
+        <button class="btn btn-success" data-testid="tooltip-success">✅ Success</button>
+        <div class="tooltip-box" data-testid="tooltip-success-text">Action completed successfully!</div>
+      </div>
+      <div class="tooltip-wrap">
+        <button class="btn btn-danger" data-testid="tooltip-warning">⚠️ Warning</button>
+        <div class="tooltip-box" data-testid="tooltip-warning-text">This action cannot be undone</div>
+      </div>
+      <div class="tooltip-wrap">
+        <span style="color:var(--accent2);text-decoration:underline;cursor:help;font-size:14px" data-testid="tooltip-link">
+          Hover over me
+          <div class="tooltip-box">I am a tooltip on text!</div>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function submitForm() {
+  const name = document.getElementById('txt-name').value;
+  const email = document.getElementById('txt-email').value;
+  const num = document.getElementById('txt-number').value;
+  const area = document.getElementById('txt-area').value;
+  document.getElementById('form-result').innerHTML =
+    `<strong>Name:</strong> ${name || '(empty)'} | <strong>Email:</strong> ${email || '(empty)'} | <strong>Number:</strong> ${num || '(empty)'} | <strong>Notes:</strong> ${area || '(empty)'}`;
+}
+
+function showBtnResult(msg) {
+  document.getElementById('btn-result').innerHTML = `<strong>${msg}</strong>`;
+}
+
+function getChecked() {
+  const checks = ['chk-js','chk-ts','chk-python','chk-java'];
+  const selected = checks.filter(id => document.getElementById(id).checked)
+    .map(id => document.getElementById(id).parentElement.textContent.trim());
+  document.getElementById('check-result').innerHTML =
+    selected.length ? `<strong>Selected:</strong> ${selected.join(', ')}` : '<strong>None selected</strong>';
+}
+
+function getRadio() {
+  const radios = document.querySelectorAll('input[name="browser"]');
+  const selected = [...radios].find(r => r.checked);
+  document.getElementById('radio-result').innerHTML =
+    selected ? `<strong>Selected:</strong> ${selected.value}` : '<strong>None selected</strong>';
+}
+
+function updateSelectResult() {
+  const country = document.getElementById('sel-country').value;
+  const multi = [...document.getElementById('sel-multi').selectedOptions].map(o => o.value);
+  document.getElementById('select-result').innerHTML =
+    `<strong>Country:</strong> ${country || 'none'} | <strong>Frameworks:</strong> ${multi.length ? multi.join(', ') : 'none'}`;
+}
+
+function toggleDropdown(id) {
+  const trigger = document.querySelector(`#${id} .custom-dropdown-trigger`);
+  const menu = document.querySelector(`#${id} .custom-dropdown-menu`);
+  trigger.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+
+function selectDropdown(id, value) {
+  document.getElementById(`${id}-value`).textContent = value;
+  document.querySelector(`#${id} .custom-dropdown-trigger`).classList.remove('open');
+  document.querySelector(`#${id} .custom-dropdown-menu`).classList.remove('open');
+  updateCustomDDResult();
+}
+
+function updateCustomDDResult() {
+  const lang = document.getElementById('dd-lang-value').textContent;
+  const fw = document.getElementById('dd-fw-value').textContent;
+  document.getElementById('custom-dd-result').innerHTML =
+    `<strong>Language:</strong> ${lang} | <strong>Framework:</strong> ${fw}`;
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.custom-dropdown')) {
+    document.querySelectorAll('.custom-dropdown-trigger').forEach(t => t.classList.remove('open'));
+    document.querySelectorAll('.custom-dropdown-menu').forEach(m => m.classList.remove('open'));
+  }
+});
+</script>
+</body>
+</html>
