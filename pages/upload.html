@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload & Download — Playwright Practice</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/auth.js"></script>
+<script>requireLogin(); document.write(renderNav('upload.html'));</script>
+
+<div class="page-wrap">
+  <div class="page-title">Upload & Download Practice</div>
+  <div class="page-subtitle">Single upload · Multiple upload · Download file</div>
+
+  <div class="section">
+    <div class="section-title">Single File Upload</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">
+      Playwright: <code style="color:var(--accent2)">await fileInput.setInputFiles('path/to/file')</code>
+    </p>
+    <input type="file" id="upload-single" data-testid="upload-single" style="display:none" onchange="handleSingle(this)">
+    <div class="upload-zone" data-testid="upload-zone-single" onclick="document.getElementById('upload-single').click()"
+         ondragover="this.classList.add('dragover');event.preventDefault()"
+         ondragleave="this.classList.remove('dragover')"
+         ondrop="handleDrop(event,'upload-single')">
+      <div style="font-size:32px">📂</div>
+      <p>Click or drag a file here to upload</p>
+      <p style="font-size:12px;color:var(--text3);margin-top:4px">Any file type accepted</p>
+    </div>
+    <div class="upload-list" id="upload-single-list" data-testid="upload-single-list"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Multiple File Upload</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">
+      Playwright: <code style="color:var(--accent2)">await fileInput.setInputFiles(['file1', 'file2', 'file3'])</code>
+    </p>
+    <input type="file" id="upload-multi" data-testid="upload-multi" multiple style="display:none" onchange="handleMulti(this)">
+    <div class="upload-zone" data-testid="upload-zone-multi" onclick="document.getElementById('upload-multi').click()"
+         ondragover="this.classList.add('dragover');event.preventDefault()"
+         ondragleave="this.classList.remove('dragover')">
+      <div style="font-size:32px">📁</div>
+      <p>Click or drag multiple files here</p>
+      <p style="font-size:12px;color:var(--text3);margin-top:4px">Hold Ctrl to select multiple files</p>
+    </div>
+    <div class="upload-list" id="upload-multi-list" data-testid="upload-multi-list"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Download Files</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">
+      Playwright: <code style="color:var(--accent2)">const [download] = await Promise.all([page.waitForEvent('download'), page.click('#btn-download')])</code>
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" id="btn-download-csv" data-testid="btn-download-csv" onclick="downloadCSV()">
+        ⬇️ Download CSV
+      </button>
+      <button class="btn btn-success" id="btn-download-json" data-testid="btn-download-json" onclick="downloadJSON()">
+        ⬇️ Download JSON
+      </button>
+      <button class="btn btn-secondary" id="btn-download-txt" data-testid="btn-download-txt" onclick="downloadTXT()">
+        ⬇️ Download TXT
+      </button>
+    </div>
+    <div class="result-box" id="download-result" data-testid="download-result">Click a download button to download a file</div>
+  </div>
+</div>
+
+<script>
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes/1024).toFixed(1) + ' KB';
+  return (bytes/1048576).toFixed(1) + ' MB';
+}
+
+function renderFileItem(file) {
+  return `<div class="upload-item">
+    <span class="file-name">📄 ${file.name}</span>
+    <span class="file-size">${formatSize(file.size)} · ${file.type || 'unknown type'}</span>
+  </div>`;
+}
+
+function handleSingle(input) {
+  const list = document.getElementById('upload-single-list');
+  if (input.files[0]) {
+    list.innerHTML = renderFileItem(input.files[0]);
+  }
+}
+
+function handleMulti(input) {
+  const list = document.getElementById('upload-multi-list');
+  list.innerHTML = [...input.files].map(renderFileItem).join('');
+}
+
+function handleDrop(e, inputId) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('dragover');
+  const input = document.getElementById(inputId);
+  const dt = new DataTransfer();
+  [...e.dataTransfer.files].forEach(f => dt.items.add(f));
+  input.files = dt.files;
+  if (inputId === 'upload-single') handleSingle(input);
+  else handleMulti(input);
+}
+
+function downloadCSV() {
+  const csv = 'id,name,email,role\n1,Alice,alice@test.com,Admin\n2,Bob,bob@test.com,Tester\n3,Carol,carol@test.com,Developer';
+  triggerDownload(csv, 'sample-data.csv', 'text/csv');
+  document.getElementById('download-result').innerHTML = '<strong style="color:var(--green)">Downloaded: sample-data.csv</strong>';
+}
+
+function downloadJSON() {
+  const json = JSON.stringify([
+    {id:1,name:'Alice',email:'alice@test.com',role:'Admin'},
+    {id:2,name:'Bob',email:'bob@test.com',role:'Tester'}
+  ], null, 2);
+  triggerDownload(json, 'sample-data.json', 'application/json');
+  document.getElementById('download-result').innerHTML = '<strong style="color:var(--green)">Downloaded: sample-data.json</strong>';
+}
+
+function downloadTXT() {
+  const txt = 'Playwright Practice Site\nDownload test file\n\nThis file was generated for automation testing.\nTimestamp: ' + new Date().toISOString();
+  triggerDownload(txt, 'sample.txt', 'text/plain');
+  document.getElementById('download-result').innerHTML = '<strong style="color:var(--green)">Downloaded: sample.txt</strong>';
+}
+
+function triggerDownload(content, filename, type) {
+  const blob = new Blob([content], {type});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>

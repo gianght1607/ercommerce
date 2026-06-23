@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag & Drop — Playwright Practice</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/auth.js"></script>
+<script>requireLogin(); document.write(renderNav('dragdrop.html'));</script>
+
+<div class="page-wrap">
+  <div class="page-title">Drag & Drop Practice</div>
+  <div class="page-subtitle">Kéo thả items giữa các cột — Playwright dùng <code style="color:var(--accent2)">dragAndDrop()</code> hoặc <code style="color:var(--accent2)">dragTo()</code></div>
+
+  <div class="section">
+    <div class="section-title">Kanban Board</div>
+    <div class="drag-container" id="kanban">
+      <div class="drop-zone" id="zone-todo" data-testid="zone-todo" ondragover="allowDrop(event)" ondrop="drop(event,'zone-todo')" ondragleave="removeDragover(event)">
+        <h4>📋 To Do <span id="count-todo" style="color:var(--accent2)"></span></h4>
+        <div class="drag-item" id="item-1" data-testid="item-1" draggable="true" ondragstart="drag(event)">🔴 Write test cases</div>
+        <div class="drag-item" id="item-2" data-testid="item-2" draggable="true" ondragstart="drag(event)">🟡 Setup environment</div>
+        <div class="drag-item" id="item-3" data-testid="item-3" draggable="true" ondragstart="drag(event)">🔵 Review requirements</div>
+      </div>
+
+      <div class="drop-zone" id="zone-progress" data-testid="zone-progress" ondragover="allowDrop(event)" ondrop="drop(event,'zone-progress')" ondragleave="removeDragover(event)">
+        <h4>⚙️ In Progress <span id="count-progress" style="color:var(--yellow)"></span></h4>
+        <div class="drag-item" id="item-4" data-testid="item-4" draggable="true" ondragstart="drag(event)">🟠 Automate login flow</div>
+      </div>
+
+      <div class="drop-zone" id="zone-done" data-testid="zone-done" ondragover="allowDrop(event)" ondrop="drop(event,'zone-done')" ondragleave="removeDragover(event)">
+        <h4>✅ Done <span id="count-done" style="color:var(--green)"></span></h4>
+        <div class="drag-item" id="item-5" data-testid="item-5" draggable="true" ondragstart="drag(event)">🟢 Project kickoff</div>
+      </div>
+    </div>
+    <div class="result-box" id="drag-result" data-testid="drag-result" style="margin-top:16px">Drag items between columns</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Priority Reorder (same list)</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Kéo để sắp xếp thứ tự ưu tiên</p>
+    <div id="sortable-list" data-testid="sortable-list" style="max-width:400px">
+      <div class="drag-item" id="pri-1" data-testid="pri-1" draggable="true" ondragstart="dragPri(event)" ondragover="dragoverPri(event)" ondrop="dropPri(event)">🥇 High Priority — Bug Fix</div>
+      <div class="drag-item" id="pri-2" data-testid="pri-2" draggable="true" ondragstart="dragPri(event)" ondragover="dragoverPri(event)" ondrop="dropPri(event)">🥈 Medium — New Feature</div>
+      <div class="drag-item" id="pri-3" data-testid="pri-3" draggable="true" ondragstart="dragPri(event)" ondragover="dragoverPri(event)" ondrop="dropPri(event)">🥉 Low — Refactor Code</div>
+      <div class="drag-item" id="pri-4" data-testid="pri-4" draggable="true" ondragstart="dragPri(event)" ondragover="dragoverPri(event)" ondrop="dropPri(event)">📌 Backlog — Documentation</div>
+    </div>
+    <div class="result-box" id="sort-result" data-testid="sort-result" style="margin-top:16px">Drag to reorder priority</div>
+  </div>
+</div>
+
+<script>
+let draggedId = null;
+
+function drag(e) {
+  draggedId = e.target.id;
+  e.target.classList.add('dragging');
+}
+function allowDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('dragover');
+}
+function removeDragover(e) {
+  e.currentTarget.classList.remove('dragover');
+}
+function drop(e, zoneId) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('dragover');
+  const item = document.getElementById(draggedId);
+  if (item) {
+    e.currentTarget.appendChild(item);
+    item.classList.remove('dragging');
+  }
+  updateCounts();
+  document.getElementById('drag-result').innerHTML =
+    `<strong>Moved:</strong> "${item?.textContent.trim()}" → ${zoneId.replace('zone-','')}`;
+}
+function updateCounts() {
+  ['todo','progress','done'].forEach(z => {
+    const count = document.querySelectorAll(`#zone-${z} .drag-item`).length;
+    document.getElementById(`count-${z}`).textContent = `(${count})`;
+  });
+}
+
+// Priority sortable
+let priDragId = null;
+function dragPri(e) { priDragId = e.target.id; e.target.style.opacity = '.4'; }
+function dragoverPri(e) { e.preventDefault(); }
+function dropPri(e) {
+  e.preventDefault();
+  const dragEl = document.getElementById(priDragId);
+  const targetEl = e.currentTarget;
+  if (dragEl && targetEl && dragEl !== targetEl) {
+    const list = document.getElementById('sortable-list');
+    const items = [...list.querySelectorAll('.drag-item')];
+    const fromIdx = items.indexOf(dragEl);
+    const toIdx = items.indexOf(targetEl);
+    if (fromIdx < toIdx) list.insertBefore(dragEl, targetEl.nextSibling);
+    else list.insertBefore(dragEl, targetEl);
+  }
+  if (dragEl) dragEl.style.opacity = '1';
+  const order = [...document.querySelectorAll('#sortable-list .drag-item')].map(el => el.textContent.trim().substring(3)).join(' → ');
+  document.getElementById('sort-result').innerHTML = `<strong>New order:</strong> ${order}`;
+}
+updateCounts();
+</script>
+</body>
+</html>
