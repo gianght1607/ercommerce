@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar — Playwright Practice</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/auth.js"></script>
+<script>requireLogin(); document.write(renderNav('calendar.html'));</script>
+
+<div class="page-wrap">
+  <div class="page-title">Calendar / DatePicker Practice</div>
+  <div class="page-subtitle">Native date input · Custom calendar · Date range picker</div>
+
+  <div class="section">
+    <div class="section-title">Native Date Input</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Playwright: <code style="color:var(--accent2)">await page.fill('#date-native', '2025-06-15')</code></p>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label>Single Date</label>
+          <input type="date" id="date-native" data-testid="date-native" onchange="updateNativeResult()">
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label>Date & Time</label>
+          <input type="datetime-local" id="date-time" data-testid="date-time" onchange="updateNativeResult()">
+        </div>
+      </div>
+    </div>
+    <div class="result-box" id="native-result" data-testid="native-result">Select a date to see result</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Custom Calendar (DatePicker)</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Thực hành navigate tháng và click vào ngày cụ thể</p>
+    <div class="row">
+      <div class="col calendar-wrap">
+        <div class="calendar-header">
+          <button class="cal-nav" id="cal-prev" data-testid="cal-prev" onclick="changeMonth(-1)">‹</button>
+          <span id="cal-month-year" data-testid="cal-month-year" style="font-weight:600;font-size:15px"></span>
+          <button class="cal-nav" id="cal-next" data-testid="cal-next" onclick="changeMonth(1)">›</button>
+        </div>
+        <div class="calendar-grid" id="cal-grid" data-testid="cal-grid"></div>
+      </div>
+      <div class="col">
+        <div class="result-box" id="cal-result" data-testid="cal-result" style="min-height:80px">
+          Click a date to select it
+        </div>
+        <div class="form-group" style="margin-top:16px">
+          <label>Selected date (read-only)</label>
+          <input type="text" id="cal-selected-input" data-testid="cal-selected-input" readonly placeholder="No date selected" style="opacity:.8">
+        </div>
+        <button class="btn btn-secondary btn-sm" data-testid="cal-clear" onclick="clearDate()">Clear date</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Date Range Picker</div>
+    <div class="row">
+      <div class="col">
+        <div class="form-group">
+          <label>Start Date</label>
+          <input type="date" id="range-start" data-testid="range-start" onchange="updateRange()">
+        </div>
+      </div>
+      <div class="col">
+        <div class="form-group">
+          <label>End Date</label>
+          <input type="date" id="range-end" data-testid="range-end" onchange="updateRange()">
+        </div>
+      </div>
+    </div>
+    <div class="result-box" id="range-result" data-testid="range-result">Select start and end dates</div>
+  </div>
+</div>
+
+<script>
+let currentDate = new Date();
+let selectedDate = null;
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function renderCalendar() {
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  document.getElementById('cal-month-year').textContent = `${MONTHS[month]} ${year}`;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInPrev = new Date(year, month, 0).getDate();
+  const today = new Date();
+
+  let html = DAYS.map(d => `<div class="cal-day-name">${d}</div>`).join('');
+
+  // Prev month days
+  for (let i = firstDay - 1; i >= 0; i--) {
+    html += `<div class="cal-day other-month">${daysInPrev - i}</div>`;
+  }
+
+  // Current month days
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = today.getDate()===d && today.getMonth()===month && today.getFullYear()===year;
+    const isSelected = selectedDate && selectedDate.getDate()===d && selectedDate.getMonth()===month && selectedDate.getFullYear()===year;
+    const classes = ['cal-day', isToday?'today':'', isSelected?'selected':''].filter(Boolean).join(' ');
+    const testid = `cal-day-${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    html += `<div class="${classes}" data-testid="${testid}" onclick="selectDay(${year},${month},${d})">${d}</div>`;
+  }
+
+  document.getElementById('cal-grid').innerHTML = html;
+}
+
+function selectDay(year, month, day) {
+  selectedDate = new Date(year, month, day);
+  const formatted = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  const display = `${MONTHS[month]} ${day}, ${year}`;
+  document.getElementById('cal-result').innerHTML = `<strong>Selected:</strong> ${display}`;
+  document.getElementById('cal-selected-input').value = formatted;
+  renderCalendar();
+}
+
+function changeMonth(dir) {
+  currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + dir, 1);
+  renderCalendar();
+}
+
+function clearDate() {
+  selectedDate = null;
+  document.getElementById('cal-selected-input').value = '';
+  document.getElementById('cal-result').innerHTML = 'Date cleared';
+  renderCalendar();
+}
+
+function updateNativeResult() {
+  const d = document.getElementById('date-native').value;
+  const dt = document.getElementById('date-time').value;
+  document.getElementById('native-result').innerHTML =
+    `<strong>Date:</strong> ${d || 'none'} | <strong>DateTime:</strong> ${dt || 'none'}`;
+}
+
+function updateRange() {
+  const start = document.getElementById('range-start').value;
+  const end = document.getElementById('range-end').value;
+  if (start && end) {
+    const s = new Date(start), e = new Date(end);
+    const days = Math.round((e - s) / 86400000);
+    document.getElementById('range-result').innerHTML =
+      days >= 0
+        ? `<strong>Range:</strong> ${start} → ${end} &nbsp;|&nbsp; <strong>Duration:</strong> ${days} day(s)`
+        : `<strong style="color:var(--red)">End date must be after start date</strong>`;
+  } else {
+    document.getElementById('range-result').innerHTML = `<strong>Start:</strong> ${start||'none'} | <strong>End:</strong> ${end||'none'}`;
+  }
+}
+
+renderCalendar();
+</script>
+</body>
+</html>

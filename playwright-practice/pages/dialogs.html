@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dialogs — Playwright Practice</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/auth.js"></script>
+<script>requireLogin(); document.write(renderNav('dialogs.html'));</script>
+
+<div class="page-wrap">
+  <div class="page-title">Dialogs Practice</div>
+  <div class="page-subtitle">Alert · Confirm · Prompt — handle with <code style="color:var(--accent2)">page.on('dialog')</code> hoặc <code style="color:var(--accent2)">waitForEvent('dialog')</code></div>
+
+  <div class="section">
+    <div class="section-title">Alert Dialog</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Alert chỉ có nút OK. Playwright dùng <code style="color:var(--accent2)">dialog.accept()</code></p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" data-testid="btn-alert-simple" onclick="showSimpleAlert()">Simple Alert</button>
+      <button class="btn btn-warning" data-testid="btn-alert-warning" onclick="showWarningAlert()">Warning Alert</button>
+      <button class="btn btn-danger" data-testid="btn-alert-error" onclick="showErrorAlert()">Error Alert</button>
+    </div>
+    <div class="result-box" id="alert-result" data-testid="alert-result">Click a button to trigger an alert</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Confirm Dialog</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Confirm có OK và Cancel. Playwright dùng <code style="color:var(--accent2)">dialog.accept()</code> hoặc <code style="color:var(--accent2)">dialog.dismiss()</code></p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" data-testid="btn-confirm-delete" onclick="showDeleteConfirm()">Confirm Delete</button>
+      <button class="btn btn-warning" data-testid="btn-confirm-save" onclick="showSaveConfirm()">Confirm Save</button>
+      <button class="btn btn-secondary" data-testid="btn-confirm-logout" onclick="showLogoutConfirm()">Confirm Logout</button>
+    </div>
+    <div class="result-box" id="confirm-result" data-testid="confirm-result">Click a button to trigger a confirm dialog</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Prompt Dialog</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Prompt nhập text. Playwright dùng <code style="color:var(--accent2)">dialog.accept('text')</code> để nhập và xác nhận</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" data-testid="btn-prompt-name" onclick="showNamePrompt()">Enter Your Name</button>
+      <button class="btn btn-secondary" data-testid="btn-prompt-age" onclick="showAgePrompt()">Enter Your Age</button>
+      <button class="btn btn-success" data-testid="btn-prompt-city" onclick="showCityPrompt()">Enter Your City</button>
+    </div>
+    <div class="result-box" id="prompt-result" data-testid="prompt-result">Click a button to trigger a prompt dialog</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Chained Dialogs</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:16px">Multiple dialogs triggered in sequence</p>
+    <button class="btn btn-primary" data-testid="btn-chain-dialogs" onclick="chainDialogs()">Start Chain (3 dialogs)</button>
+    <div class="result-box" id="chain-result" data-testid="chain-result">Click to trigger 3 dialogs in a row</div>
+  </div>
+</div>
+
+<script>
+function showSimpleAlert() {
+  alert('This is a simple alert message!');
+  document.getElementById('alert-result').innerHTML = '<strong style="color:var(--green)">Alert was shown and accepted</strong>';
+}
+function showWarningAlert() {
+  alert('⚠️ Warning: This operation may take a while. Please wait.');
+  document.getElementById('alert-result').innerHTML = '<strong style="color:var(--yellow)">Warning alert accepted</strong>';
+}
+function showErrorAlert() {
+  alert('❌ Error: Something went wrong. Please try again.');
+  document.getElementById('alert-result').innerHTML = '<strong style="color:var(--red)">Error alert accepted</strong>';
+}
+function showDeleteConfirm() {
+  const res = confirm('Are you sure you want to delete this item? This action cannot be undone.');
+  document.getElementById('confirm-result').innerHTML = res
+    ? '<strong style="color:var(--red)">Confirmed — item would be deleted</strong>'
+    : '<strong style="color:var(--green)">Cancelled — item was not deleted</strong>';
+}
+function showSaveConfirm() {
+  const res = confirm('Save changes to this document?');
+  document.getElementById('confirm-result').innerHTML = res
+    ? '<strong style="color:var(--green)">Confirmed — changes saved</strong>'
+    : '<strong style="color:var(--yellow)">Cancelled — changes not saved</strong>';
+}
+function showLogoutConfirm() {
+  const res = confirm('Are you sure you want to logout?');
+  document.getElementById('confirm-result').innerHTML = res
+    ? '<strong style="color:var(--red)">Confirmed logout</strong>'
+    : '<strong style="color:var(--green)">Logout cancelled</strong>';
+}
+function showNamePrompt() {
+  const name = prompt('Please enter your name:', 'Ha Giang');
+  document.getElementById('prompt-result').innerHTML = name !== null
+    ? `<strong>Name entered:</strong> "${name}"`
+    : '<strong>Prompt was cancelled</strong>';
+}
+function showAgePrompt() {
+  const age = prompt('Please enter your age:');
+  document.getElementById('prompt-result').innerHTML = age !== null
+    ? `<strong>Age entered:</strong> "${age}"`
+    : '<strong>Prompt was cancelled</strong>';
+}
+function showCityPrompt() {
+  const city = prompt('Which city are you from?', 'Hanoi');
+  document.getElementById('prompt-result').innerHTML = city !== null
+    ? `<strong>City entered:</strong> "${city}"`
+    : '<strong>Prompt was cancelled</strong>';
+}
+function chainDialogs() {
+  alert('Step 1: This is the first dialog');
+  const ok = confirm('Step 2: Do you want to continue?');
+  if (ok) {
+    const name = prompt('Step 3: Enter your name to complete:');
+    document.getElementById('chain-result').innerHTML =
+      `<strong>Chain complete!</strong> Confirmed: ${ok}, Name: "${name || '(empty)'}"`;
+  } else {
+    document.getElementById('chain-result').innerHTML = '<strong>Chain stopped at step 2 (cancelled)</strong>';
+  }
+}
+</script>
+</body>
+</html>

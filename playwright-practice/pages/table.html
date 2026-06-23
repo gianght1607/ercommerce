@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Table — Playwright Practice</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/auth.js"></script>
+<script>requireLogin(); document.write(renderNav('table.html'));</script>
+
+<div class="page-wrap">
+  <div class="page-title">Table / Grid Practice</div>
+  <div class="page-subtitle">Search · Sort · Pagination · Row actions</div>
+
+  <div class="section">
+    <div class="section-title">User Table</div>
+    <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+      <input type="search" id="tbl-search" data-testid="tbl-search" placeholder="Search by name or email..." style="max-width:280px">
+      <select id="tbl-filter-role" data-testid="tbl-filter-role" style="max-width:160px" onchange="renderTable()">
+        <option value="">All roles</option>
+        <option value="Admin">Admin</option>
+        <option value="Tester">Tester</option>
+        <option value="Developer">Developer</option>
+      </select>
+      <select id="tbl-filter-status" data-testid="tbl-filter-status" style="max-width:160px" onchange="renderTable()">
+        <option value="">All status</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+      </select>
+    </div>
+
+    <div style="overflow-x:auto">
+      <table class="data-table" id="main-table" data-testid="main-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th style="cursor:pointer" onclick="sortTable('name')" data-testid="th-name">Name <span id="sort-name">↕</span></th>
+            <th style="cursor:pointer" onclick="sortTable('email')" data-testid="th-email">Email <span id="sort-email">↕</span></th>
+            <th style="cursor:pointer" onclick="sortTable('role')" data-testid="th-role">Role <span id="sort-role">↕</span></th>
+            <th>Status</th>
+            <th>Score</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="table-body" data-testid="table-body"></tbody>
+      </table>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:12px">
+      <div style="font-size:13px;color:var(--text2)" id="tbl-info" data-testid="tbl-info"></div>
+      <div class="pagination" id="pagination" data-testid="pagination"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Action Result</div>
+    <div class="result-box" id="action-result" data-testid="action-result">Click Edit or Delete on a row to see result here</div>
+  </div>
+</div>
+
+<script>
+const ALL_DATA = [
+  {id:1, name:'Alice Johnson', email:'alice@test.com', role:'Admin', status:'Active', score:95},
+  {id:2, name:'Bob Smith', email:'bob@test.com', role:'Tester', status:'Active', score:87},
+  {id:3, name:'Carol White', email:'carol@test.com', role:'Developer', status:'Inactive', score:72},
+  {id:4, name:'David Lee', email:'david@test.com', role:'Tester', status:'Active', score:88},
+  {id:5, name:'Eva Martinez', email:'eva@test.com', role:'Developer', status:'Active', score:91},
+  {id:6, name:'Frank Chen', email:'frank@test.com', role:'Admin', status:'Active', score:78},
+  {id:7, name:'Grace Kim', email:'grace@test.com', role:'Tester', status:'Inactive', score:65},
+  {id:8, name:'Henry Brown', email:'henry@test.com', role:'Developer', status:'Active', score:83},
+  {id:9, name:'Iris Davis', email:'iris@test.com', role:'Tester', status:'Active', score:90},
+  {id:10, name:'Jack Wilson', email:'jack@test.com', role:'Admin', status:'Active', score:76},
+  {id:11, name:'Kate Taylor', email:'kate@test.com', role:'Developer', status:'Inactive', score:69},
+  {id:12, name:'Liam Anderson', email:'liam@test.com', role:'Tester', status:'Active', score:84},
+];
+
+let currentPage = 1;
+const pageSize = 5;
+let sortCol = '', sortDir = 1;
+
+document.getElementById('tbl-search').addEventListener('input', () => { currentPage = 1; renderTable(); });
+
+function getFiltered() {
+  const q = document.getElementById('tbl-search').value.toLowerCase();
+  const role = document.getElementById('tbl-filter-role').value;
+  const status = document.getElementById('tbl-filter-status').value;
+  let data = ALL_DATA.filter(r =>
+    (!q || r.name.toLowerCase().includes(q) || r.email.toLowerCase().includes(q)) &&
+    (!role || r.role === role) &&
+    (!status || r.status === status)
+  );
+  if (sortCol) {
+    data = data.sort((a, b) => {
+      const av = String(a[sortCol]).toLowerCase(), bv = String(b[sortCol]).toLowerCase();
+      return av < bv ? -sortDir : av > bv ? sortDir : 0;
+    });
+  }
+  return data;
+}
+
+function sortTable(col) {
+  if (sortCol === col) sortDir *= -1; else { sortCol = col; sortDir = 1; }
+  ['name','email','role'].forEach(c => document.getElementById('sort-'+c).textContent = c===col ? (sortDir===1?'↑':'↓') : '↕');
+  renderTable();
+}
+
+function renderTable() {
+  const data = getFiltered();
+  const total = data.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  if (currentPage > totalPages) currentPage = totalPages;
+  const start = (currentPage - 1) * pageSize;
+  const pageData = data.slice(start, start + pageSize);
+
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = pageData.map((r, i) => `
+    <tr data-testid="row-${r.id}">
+      <td>${start + i + 1}</td>
+      <td data-testid="cell-name-${r.id}"><strong>${r.name}</strong></td>
+      <td data-testid="cell-email-${r.id}">${r.email}</td>
+      <td data-testid="cell-role-${r.id}">${r.role}</td>
+      <td data-testid="cell-status-${r.id}">
+        <span class="badge ${r.status==='Active'?'badge-green':'badge-red'}">${r.status}</span>
+      </td>
+      <td data-testid="cell-score-${r.id}">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span>${r.score}</span>
+          <div class="progress-wrap" style="width:60px">
+            <div class="progress-bar" style="width:${r.score}%"></div>
+          </div>
+        </div>
+      </td>
+      <td>
+        <button class="btn btn-secondary btn-sm" data-testid="btn-edit-${r.id}" onclick="editRow(${r.id})">Edit</button>
+        <button class="btn btn-danger btn-sm" data-testid="btn-delete-${r.id}" onclick="deleteRow(${r.id})" style="margin-left:6px">Delete</button>
+      </td>
+    </tr>
+  `).join('') || `<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:32px">No results found</td></tr>`;
+
+  document.getElementById('tbl-info').textContent = `Showing ${start+1}–${Math.min(start+pageSize,total)} of ${total} records`;
+
+  const pg = document.getElementById('pagination');
+  pg.innerHTML = '';
+  for (let p = 1; p <= totalPages; p++) {
+    const btn = document.createElement('button');
+    btn.className = 'page-btn' + (p===currentPage?' active':'');
+    btn.textContent = p;
+    btn.setAttribute('data-testid', 'page-btn-'+p);
+    btn.onclick = () => { currentPage = p; renderTable(); };
+    pg.appendChild(btn);
+  }
+}
+
+function editRow(id) {
+  const row = ALL_DATA.find(r => r.id === id);
+  document.getElementById('action-result').innerHTML =
+    `<strong>Edit clicked:</strong> ID=${id} | Name="${row.name}" | Email="${row.email}" | Role="${row.role}"`;
+}
+
+function deleteRow(id) {
+  const row = ALL_DATA.find(r => r.id === id);
+  document.getElementById('action-result').innerHTML =
+    `<strong style="color:var(--red)">Delete clicked:</strong> ID=${id} | Name="${row.name}"`;
+}
+
+renderTable();
+</script>
+</body>
+</html>
