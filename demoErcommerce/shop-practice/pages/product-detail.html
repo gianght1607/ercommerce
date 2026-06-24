@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Product Detail — ShopDemo</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/app.js"></script>
+<script>requireLogin(); document.write(renderNav('products'));</script>
+
+<div class="page-wrap">
+  <div style="margin-bottom:20px">
+    <a href="products.html" style="color:var(--text2);text-decoration:none;font-size:13px" data-testid="breadcrumb-products">← Back to Products</a>
+  </div>
+  <div id="detail-content"></div>
+</div>
+
+<script>
+updateCartBadge();
+const params = new URLSearchParams(window.location.search);
+const id = parseInt(params.get('id'));
+const p = PRODUCTS.find(x => x.id === id);
+
+if (!p) {
+  document.getElementById('detail-content').innerHTML = `<div class="empty-state"><div class="icon">❌</div><p>Product not found.</p><a href="products.html" class="btn btn-primary" style="margin-top:16px">Back to Products</a></div>`;
+} else {
+  document.title = p.name + ' — ShopDemo';
+  document.getElementById('detail-content').innerHTML = `
+    <div class="grid-2">
+      <div>
+        <!-- IMAGE -->
+        <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;height:320px;display:flex;align-items:center;justify-content:center;font-size:100px;margin-bottom:20px" data-testid="detail-img">
+          ${p.emoji}
+        </div>
+        <!-- DESCRIPTION -->
+        <div class="card">
+          <div class="section-title">Description</div>
+          <p style="font-size:14px;color:var(--text2);line-height:1.7" data-testid="detail-desc">${p.desc}</p>
+          <hr class="divider" style="margin:16px 0">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px">
+            <div><span style="color:var(--text3)">Category</span><br><strong data-testid="detail-category">${p.category}</strong></div>
+            <div><span style="color:var(--text3)">Rating</span><br><strong style="color:var(--yellow)" data-testid="detail-rating">★ ${p.rating} (${p.reviews} reviews)</strong></div>
+            <div><span style="color:var(--text3)">Stock</span><br><strong class="${p.stock>0?'in-stock':'out-stock'}" data-testid="detail-stock">${p.stock > 0 ? p.stock + ' units' : 'Out of stock'}</strong></div>
+            <div><span style="color:var(--text3)">SKU</span><br><strong data-testid="detail-sku">SKU-${String(p.id).padStart(4,'0')}</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div>
+        <div class="summary-box">
+          <div style="font-size:13px;color:var(--text3);margin-bottom:4px">${p.category}</div>
+          <h1 style="font-size:20px;font-weight:700;margin-bottom:12px" data-testid="detail-name">${p.name}</h1>
+          <div style="margin-bottom:16px">
+            <span style="font-size:28px;font-weight:700;color:var(--accent2)" data-testid="detail-price">${formatPrice(p.price)}</span>
+            ${p.oldPrice ? `<br><span style="font-size:13px;color:var(--text3);text-decoration:line-through" data-testid="detail-old-price">${formatPrice(p.oldPrice)}</span>
+            <span class="badge badge-red" style="margin-left:6px">-${Math.round((1-p.price/p.oldPrice)*100)}%</span>` : ''}
+          </div>
+          <hr class="divider">
+          <div class="form-group">
+            <label>Quantity</label>
+            <div class="qty-control">
+              <button class="qty-btn" data-testid="btn-qty-minus" onclick="changeQty(-1)">−</button>
+              <span class="qty-val" id="qty-val" data-testid="qty-value">1</span>
+              <button class="qty-btn" data-testid="btn-qty-plus" onclick="changeQty(1)">+</button>
+              <span style="font-size:12px;color:var(--text3);margin-left:4px">/ ${p.stock} available</span>
+            </div>
+          </div>
+          <div id="cart-alert" class="alert" style="display:none"></div>
+          <button class="btn btn-primary btn-full" id="btn-add-cart" data-testid="btn-add-to-cart"
+            onclick="doAddCart()" ${p.stock===0?'disabled':''} style="margin-bottom:10px">
+            🛒 Add to Cart
+          </button>
+          <a href="cart.html" class="btn btn-secondary btn-full" data-testid="btn-go-cart">View Cart</a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+let qty = 1;
+function changeQty(d) {
+  qty = Math.max(1, Math.min(p?.stock || 1, qty + d));
+  document.getElementById('qty-val').textContent = qty;
+}
+function doAddCart() {
+  addToCart(p, qty);
+  const el = document.getElementById('cart-alert');
+  el.className = 'alert alert-success';
+  el.textContent = `✓ Added ${qty}x "${p.name}" to cart!`;
+  el.style.display = 'block';
+  updateCartBadge();
+  setTimeout(() => { el.style.display = 'none'; }, 2500);
+}
+</script>
+</body>
+</html>

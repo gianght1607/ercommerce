@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>My Orders — ShopDemo</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<script src="../js/app.js"></script>
+<script>requireLogin(); document.write(renderNav('orders'));</script>
+
+<div class="page-wrap" id="orders-view">
+  <div class="page-title">My Orders</div>
+  <div class="page-sub">Track and manage your orders</div>
+
+  <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+    <select id="filter-status" data-testid="filter-status" style="max-width:180px" onchange="renderOrders()">
+      <option value="">All status</option>
+      <option value="Processing">Processing</option>
+      <option value="Shipped">Shipped</option>
+      <option value="Delivered">Delivered</option>
+      <option value="Cancelled">Cancelled</option>
+    </select>
+    <span id="order-count" data-testid="order-count" style="font-size:13px;color:var(--text2);align-self:center"></span>
+  </div>
+
+  <div id="orders-empty" class="empty-state" style="display:none">
+    <div class="icon">📋</div>
+    <p style="margin-bottom:16px">You have no orders yet</p>
+    <a href="products.html" class="btn btn-primary" data-testid="btn-shop-now">Shop Now</a>
+  </div>
+
+  <div id="orders-list" data-testid="orders-list"></div>
+</div>
+
+<!-- ORDER DETAIL VIEW -->
+<div class="page-wrap" id="detail-view" style="display:none">
+  <div style="margin-bottom:20px">
+    <button class="btn btn-secondary btn-sm" data-testid="btn-back-orders" onclick="showOrders()">← Back to Orders</button>
+  </div>
+  <div id="order-detail-content"></div>
+</div>
+
+<script>
+updateCartBadge();
+
+const STATUS_BADGE = {
+  Processing: 'badge-yellow',
+  Shipped: 'badge-blue',
+  Delivered: 'badge-green',
+  Cancelled: 'badge-red',
+};
+
+const PAY_LABELS = { cod: 'Cash on Delivery', bank: 'Bank Transfer', card: 'Credit Card' };
+const SHIP_LABELS = { standard: 'Standard (3-5 days)', express: 'Express (1-2 days)', 'same-day': 'Same Day' };
+
+function renderOrders() {
+  const filter = document.getElementById('filter-status').value;
+  let orders = getOrders();
+  if (filter) orders = orders.filter(o => o.status === filter);
+
+  document.getElementById('order-count').textContent = `${orders.length} order(s)`;
+
+  if (!orders.length) {
+    document.getElementById('orders-empty').style.display = 'block';
+    document.getElementById('orders-list').innerHTML = '';
+    return;
+  }
+  document.getElementById('orders-empty').style.display = 'none';
+
+  document.getElementById('orders-list').innerHTML = orders.map(o => `
+    <div class="card" style="margin-bottom:14px" data-testid="order-row-${o.id}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:2px">Order ID</div>
+          <div style="font-weight:700;font-size:16px;color:var(--accent2)" data-testid="order-id-${o.id}">${o.id}</div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:2px">Date</div>
+          <div style="font-size:14px" data-testid="order-date-${o.id}">${new Date(o.date).toLocaleDateString('en-GB')}</div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:2px">Items</div>
+          <div style="font-size:14px">${o.items.reduce((s,i)=>s+i.qty,0)} item(s)</div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:2px">Total</div>
+          <div style="font-size:16px;font-weight:700;color:var(--accent2)" data-testid="order-total-${o.id}">${formatPrice(o.total)}</div>
+        </div>
+        <div>
+          <div style="font-size:13px;color:var(--text2);margin-bottom:4px">Status</div>
+          <span class="badge ${STATUS_BADGE[o.status]||'badge-gray'}" data-testid="order-status-${o.id}">${o.status}</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-secondary btn-sm" data-testid="btn-order-detail-${o.id}" onclick="showDetail('${o.id}')">View Detail</button>
+          ${o.status === 'Processing' ? `<button class="btn btn-danger btn-sm" data-testid="btn-cancel-${o.id}" onclick="cancelOrder('${o.id}')">Cancel</button>` : ''}
+        </div>
+      </div>
+      <hr class="divider" style="margin:12px 0">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${o.items.slice(0,4).map(i => `<span style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:12px">${i.emoji} ${i.name}</span>`).join('')}
+        ${o.items.length > 4 ? `<span style="font-size:12px;color:var(--text2);padding:4px 0">+${o.items.length-4} more</span>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function cancelOrder(id) {
+  if (!confirm('Are you sure you want to cancel this order?')) return;
+  const orders = getOrders();
+  const o = orders.find(x => x.id === id);
+  if (o) { o.status = 'Cancelled'; sessionStorage.setItem('shop_orders', JSON.stringify(orders)); }
+  renderOrders();
+}
+
+function showDetail(id) {
+  const o = getOrders().find(x => x.id === id);
+  if (!o) return;
+  document.getElementById('orders-view').style.display = 'none';
+  document.getElementById('detail-view').style.display = 'block';
+
+  document.getElementById('order-detail-content').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+      <div>
+        <div class="page-title" data-testid="detail-order-id">Order ${o.id}</div>
+        <div style="font-size:13px;color:var(--text2)">${new Date(o.date).toLocaleString('en-GB')}</div>
+      </div>
+      <span class="badge ${STATUS_BADGE[o.status]||'badge-gray'}" style="font-size:14px;padding:6px 16px" data-testid="detail-status">${o.status}</span>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="section-title">Items Ordered</div>
+          ${o.items.map(i => `
+            <div class="cart-item" data-testid="detail-item-${i.id}">
+              <div class="cart-item-img">${i.emoji}</div>
+              <div class="cart-item-info">
+                <div class="cart-item-name">${i.name}</div>
+                <div style="font-size:13px;color:var(--text2)">${formatPrice(i.price)} × ${i.qty}</div>
+              </div>
+              <div style="font-weight:700;color:var(--accent2)">${formatPrice(i.price*i.qty)}</div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="card">
+          <div class="section-title">Delivery Info</div>
+          <div style="font-size:14px;display:grid;gap:8px;color:var(--text2)">
+            <div data-testid="detail-customer-name"><strong style="color:var(--text)">Name:</strong> ${o.customer.name}</div>
+            <div data-testid="detail-customer-email"><strong style="color:var(--text)">Email:</strong> ${o.customer.email}</div>
+            <div data-testid="detail-customer-phone"><strong style="color:var(--text)">Phone:</strong> ${o.customer.phone}</div>
+            <div data-testid="detail-customer-address"><strong style="color:var(--text)">Address:</strong> ${o.customer.address}</div>
+            <div><strong style="color:var(--text)">Shipping:</strong> ${SHIP_LABELS[o.shipping.method]}</div>
+            <div><strong style="color:var(--text)">Payment:</strong> ${PAY_LABELS[o.payment]}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-box" style="position:sticky;top:72px">
+        <div class="section-title">Payment Summary</div>
+        <div class="summary-row"><span>Subtotal</span><span data-testid="detail-subtotal">${formatPrice(o.subtotal)}</span></div>
+        <div class="summary-row"><span>Shipping</span><span>${o.shipping.cost ? formatPrice(o.shipping.cost) : 'Free'}</span></div>
+        ${o.discount ? `<div class="summary-row" style="color:var(--green)"><span>Discount</span><span>-${formatPrice(o.discount)}</span></div>` : ''}
+        <div class="summary-row total"><span>Total</span><span data-testid="detail-total">${formatPrice(o.total)}</span></div>
+        ${o.status === 'Processing' ? `
+          <button class="btn btn-danger btn-full" data-testid="detail-btn-cancel" onclick="cancelOrder('${o.id}');showOrders()" style="margin-top:16px">Cancel Order</button>
+        ` : ''}
+        <a href="products.html" class="btn btn-secondary btn-full" style="margin-top:8px" data-testid="detail-btn-reorder">Shop Again</a>
+      </div>
+    </div>
+  `;
+}
+
+function showOrders() {
+  document.getElementById('detail-view').style.display = 'none';
+  document.getElementById('orders-view').style.display = 'block';
+  renderOrders();
+}
+
+renderOrders();
+</script>
+</body>
+</html>
