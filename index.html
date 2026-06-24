@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ĐỨC GIANG TESTER EDUCATION – Khóa học QA / Tester thực chiến</title>
+  <meta name="description" content="Đào tạo QA/Tester thực chiến: Manual Testing, API, SQL, Selenium Java, Playwright TypeScript, Katalon, Postman CI/CD. Học xong đi làm ngay." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ─── */
+    :root {
+      --bg:        #080b14;
+      --bg1:       #0d1120;
+      --bg2:       #111827;
+      --bg3:       #1a2235;
+      --border:    rgba(255,255,255,0.07);
+      --border2:   rgba(255,255,255,0.12);
+      --c1:        #38bdf8;   /* cyan – primary */
+      --c2:        #818cf8;   /* violet – secondary */
+      --c3:        #34d399;   /* emerald – success/check */
+      --gold:      #fbbf24;   /* amber – price */
+      --c1-dim:    rgba(56,189,248,0.10);
+      --c2-dim:    rgba(129,140,248,0.10);
+      --c1-glow:   rgba(56,189,248,0.25);
+      --c2-glow:   rgba(129,140,248,0.20);
+      --text:      #f1f5f9;
+      --text2:     #94a3b8;
+      --text3:     #475569;
+      --mono:      'JetBrains Mono', monospace;
+      --sans:      'Inter', system-ui, sans-serif;
+      --r:         12px;
+      --r2:        20px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ─── GRID NOISE ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(rgba(56,189,248,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56,189,248,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .wrap { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+    section { padding: 96px 0; }
+
+    /* ─── EYEBROW ─── */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--c1);
+      background: var(--c1-dim); border: 1px solid rgba(56,189,248,0.2);
+      padding: 5px 14px; border-radius: 999px; margin-bottom: 20px;
+    }
+    .eyebrow::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--c1); box-shadow: 0 0 8px var(--c1); animation: blink 2s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .section-title {
+      font-size: clamp(28px,4vw,44px); font-weight: 800; letter-spacing: -1px; line-height: 1.15;
+    }
+    .section-title .g {
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .section-sub { color: var(--text2); font-size: 16px; line-height: 1.75; max-width: 560px; margin-top: 12px; }
+    .tc { text-align: center; }
+    .tc .section-sub { margin: 12px auto 0; }
+
+    /* ─── BUTTONS ─── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px; border-radius: 10px; font-size: 15px; font-weight: 700;
+      border: none; cursor: pointer; font-family: inherit; transition: all .2s; text-decoration: none;
+    }
+    .btn-cyan {
+      background: linear-gradient(135deg, var(--c1), #0ea5e9);
+      color: #080b14;
+      box-shadow: 0 0 28px var(--c1-glow), 0 4px 16px rgba(0,0,0,.4);
+    }
+    .btn-cyan:hover { transform: translateY(-2px); box-shadow: 0 0 40px var(--c1-glow), 0 8px 24px rgba(0,0,0,.4); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border2);
+    }
+    .btn-outline:hover { background: var(--bg3); border-color: var(--c1); color: var(--c1); }
+
+    /* ─── NAV ─── */
+    header {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(8,11,20,0.88); backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px; gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-logo {
+      width: 38px; height: 38px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--mono); font-size: 12px; font-weight: 600; color: #080b14;
+      box-shadow: 0 0 20px var(--c1-glow);
+    }
+    .brand-text { font-weight: 800; font-size: 14px; line-height: 1.2; letter-spacing: -.3px; }
+    .brand-text small { display: block; font-size: 10px; font-weight: 500; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; }
+    .nav-links { display: flex; gap: 2px; }
+    .nav-links a {
+      font-size: 13.5px; font-weight: 500; color: var(--text2);
+      padding: 6px 12px; border-radius: 8px; transition: all .15s;
+    }
+    .nav-links a:hover { color: var(--text); background: var(--bg2); }
+    .nav-cta {
+      font-size: 13.5px; font-weight: 700;
+      background: linear-gradient(135deg, var(--c1), #0ea5e9);
+      color: #080b14; padding: 8px 20px; border-radius: 8px;
+      box-shadow: 0 0 16px var(--c1-glow); transition: all .2s; white-space: nowrap;
+    }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 24px var(--c1-glow); }
+    @media(max-width:860px) { .nav-links { display: none; } .brand-text small { display: none; } }
+
+    /* ─── HERO ─── */
+    .hero { padding: 80px 0 72px; overflow: hidden; position: relative; }
+    .hero-glow {
+      position: absolute; top: -300px; left: 50%; transform: translateX(-50%);
+      width: 1000px; height: 700px;
+      background: radial-gradient(ellipse at center, rgba(56,189,248,0.10) 0%, rgba(129,140,248,0.06) 40%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+    }
+    @media(max-width:860px) { .hero-grid { grid-template-columns: 1fr; } .hero-right { display: none; } }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 28px;
+      background: var(--bg2); border: 1px solid var(--border2);
+      padding: 6px 14px 6px 6px; border-radius: 999px;
+    }
+    .hero-badge .pip {
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      color: #080b14; font-family: var(--mono); font-size: 10px; font-weight: 600;
+      padding: 3px 10px; border-radius: 999px; letter-spacing: .5px;
+    }
+    .hero-badge span { font-size: 13px; color: var(--text2); }
+
+    h1 {
+      font-size: clamp(38px, 5.5vw, 66px); font-weight: 900; letter-spacing: -2px; line-height: 1.05;
+      margin-bottom: 24px;
+    }
+    h1 .g {
+      background: linear-gradient(135deg, var(--c1) 0%, var(--c2) 60%, #a78bfa 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-lead { font-size: 17px; color: var(--text2); line-height: 1.8; margin-bottom: 36px; max-width: 480px; }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 52px; }
+
+    .hero-stats {
+      display: flex; gap: 0;
+      border-top: 1px solid var(--border); padding-top: 32px;
+    }
+    .stat { flex: 1; padding-right: 32px; border-right: 1px solid var(--border); }
+    .stat:last-child { padding-right: 0; border-right: none; padding-left: 32px; }
+    .stat:not(:first-child):not(:last-child) { padding: 0 32px; }
+    .stat .n { font-size: 34px; font-weight: 900; letter-spacing: -1px; font-family: var(--mono);
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .stat .l { font-size: 13px; color: var(--text3); margin-top: 2px; }
+
+    /* terminal window */
+    .terminal {
+      background: var(--bg1); border: 1px solid var(--border2); border-radius: var(--r2);
+      overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 60px var(--c1-glow);
+    }
+    .term-bar {
+      background: var(--bg2); padding: 12px 16px;
+      display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .term-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .term-dot.r { background: #ff5f56; }
+    .term-dot.y { background: #ffbd2e; }
+    .term-dot.g { background: #27c93f; }
+    .term-title { font-family: var(--mono); font-size: 12px; color: var(--text3); margin-left: 8px; }
+    .term-body { padding: 24px; font-family: var(--mono); font-size: 13px; line-height: 2; }
+    .term-body .prompt { color: var(--c1); }
+    .term-body .cmd { color: var(--text); }
+    .term-body .comment { color: var(--text3); }
+    .term-body .pass { color: var(--c3); }
+    .term-body .fail { color: #f87171; }
+    .term-body .num { color: var(--gold); }
+    .term-body .keyword { color: var(--c2); }
+    .cursor { display: inline-block; width: 8px; height: 15px; background: var(--c1); animation: blink 1s infinite; vertical-align: middle; }
+
+    /* ─── TOOLS STRIP ─── */
+    .tools-strip { padding: 28px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); overflow: hidden; }
+    .tools-scroll { display: flex; gap: 12px; animation: scroll-x 30s linear infinite; width: max-content; }
+    @keyframes scroll-x { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .tool-pill {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg2); border: 1px solid var(--border); border-radius: 999px;
+      padding: 7px 16px; white-space: nowrap; flex-shrink: 0;
+      font-family: var(--mono); font-size: 12px; color: var(--text2);
+    }
+    .tool-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c3); box-shadow: 0 0 6px var(--c3); }
+
+    /* ─── FEATURES ─── */
+    .features { background: var(--bg1); }
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-top: 52px;
+    }
+    .feat {
+      background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 28px 24px; position: relative; overflow: hidden; transition: all .25s;
+    }
+    .feat::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--c1-dim), transparent);
+      opacity: 0; transition: opacity .25s;
+    }
+    .feat:hover { border-color: rgba(56,189,248,0.3); transform: translateY(-4px); box-shadow: 0 20px 48px rgba(0,0,0,.5); }
+    .feat:hover::after { opacity: 1; }
+    .feat-icon {
+      width: 46px; height: 46px; border-radius: 12px;
+      background: var(--c1-dim); border: 1px solid rgba(56,189,248,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--c1); margin-bottom: 18px; position: relative; z-index: 1;
+    }
+    .feat h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; position: relative; z-index: 1; }
+    .feat p { font-size: 14px; color: var(--text2); line-height: 1.65; position: relative; z-index: 1; }
+
+    /* ─── COURSES ─── */
+    .courses { background: var(--bg); }
+    .group-head {
+      display: flex; align-items: center; gap: 12px;
+      margin: 52px 0 24px; font-family: var(--mono); font-size: 11px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--text3);
+    }
+    .group-head .gd { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .group-head.manual .gd { background: var(--c1); box-shadow: 0 0 8px var(--c1); }
+    .group-head.auto .gd { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+    .group-head .gl { flex: 1; height: 1px; background: var(--border); }
+
+    .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; }
+    .course-card {
+      background: var(--bg1); border: 1px solid var(--border); border-radius: var(--r);
+      overflow: hidden; display: flex; flex-direction: column; transition: all .25s;
+    }
+    .course-card:hover {
+      border-color: rgba(56,189,248,0.25); transform: translateY(-5px);
+      box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 48px rgba(56,189,248,0.07);
+    }
+    .course-thumb {
+      position: relative; height: 180px; overflow: hidden; cursor: pointer;
+    }
+    .course-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .course-card:hover .course-thumb img { transform: scale(1.06); }
+    .course-thumb::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(8,11,20,0.85) 0%, transparent 55%);
+    }
+
+    .badge-tag {
+      position: absolute; top: 12px; left: 12px; z-index: 1;
+      font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 6px;
+    }
+    .badge-tag.m { background: var(--c1-dim); color: var(--c1); border: 1px solid rgba(56,189,248,.25); }
+    .badge-tag.a { background: rgba(251,191,36,0.12); color: var(--gold); border: 1px solid rgba(251,191,36,.25); }
+
+    .view-overlay {
+      position: absolute; bottom: 12px; right: 12px; z-index: 1;
+      background: rgba(56,189,248,0.15); backdrop-filter: blur(8px);
+      border: 1px solid rgba(56,189,248,.3); color: var(--c1);
+      font-size: 11px; font-weight: 600; font-family: var(--mono);
+      padding: 4px 10px; border-radius: 6px; opacity: 0; transition: opacity .2s;
+    }
+    .course-card:hover .view-overlay { opacity: 1; }
+
+    .course-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .course-body h3 { font-size: 15px; font-weight: 700; line-height: 1.35; }
+    .course-body .desc { font-size: 13px; color: var(--text2); line-height: 1.65; }
+    .course-body ul { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .course-body ul li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text2); }
+    .course-body ul li svg { flex-shrink: 0; margin-top: 3px; }
+
+    .course-foot {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border);
+    }
+    .price .lbl { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: .5px; text-transform: uppercase; }
+    .price .val { font-family: var(--mono); font-size: 20px; font-weight: 700; }
+    .price .val.cyan { color: var(--c1); }
+    .price .val.gold { color: var(--gold); }
+    .price .val span { font-size: 12px; color: var(--text3); font-weight: 400; }
+    .btn-xs {
+      background: var(--bg3); border: 1px solid var(--border2); color: var(--text);
+      padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      cursor: pointer; font-family: inherit; font-family: var(--mono); transition: all .15s; white-space: nowrap;
+    }
+    .btn-xs:hover { background: var(--c1); border-color: var(--c1); color: #080b14; }
+
+    /* special card */
+    .course-card.special {
+      background: linear-gradient(145deg, #0f1a3a, #0a1628);
+      border-color: rgba(129,140,248,0.25);
+    }
+    .special-head { padding: 28px 20px 0; text-align: center; }
+    .special-icon { font-size: 42px; margin-bottom: 12px; }
+    .special h3 { font-size: 18px; font-weight: 800; color: #fff; }
+    .special .desc { color: #a5b4d0; }
+    .special ul li { color: #b0c4e8; }
+    .special .course-foot { border-top-color: rgba(255,255,255,.08); }
+
+    /* ─── PRICING ─── */
+    .pricing { background: var(--bg1); }
+    .table-wrap {
+      margin-top: 44px; border-radius: var(--r); overflow-x: auto;
+      border: 1px solid var(--border);
+    }
+    .pt {
+      width: 100%; border-collapse: collapse; font-size: 14px;
+    }
+    .pt thead th {
+      background: var(--bg2); color: var(--text2);
+      padding: 14px 18px; font-weight: 700; font-size: 13px; font-family: var(--mono);
+      border-bottom: 1px solid var(--border); white-space: nowrap; text-align: center;
+    }
+    .pt thead th:first-child { text-align: left; }
+    .pt thead th.reco {
+      background: rgba(56,189,248,0.08); color: var(--c1);
+      border-left: 1px solid rgba(56,189,248,.15); border-right: 1px solid rgba(56,189,248,.15);
+    }
+    .pt thead th .small { display: block; font-size: 10px; font-weight: 500; color: var(--gold); margin-top: 2px; }
+    .pt tbody td {
+      padding: 12px 18px; border-bottom: 1px solid var(--border);
+      color: var(--text2); text-align: center;
+    }
+    .pt tbody td:first-child { text-align: left; color: var(--text); font-weight: 500; }
+    .pt tbody tr:last-child td { border-bottom: none; }
+    .pt tbody tr:hover td { background: rgba(255,255,255,.015); }
+    .pt .reco { color: var(--gold); font-weight: 700; font-size: 15px; font-family: var(--mono); background: rgba(251,191,36,.04); }
+    .pt .group-row td {
+      background: var(--bg2); color: var(--c1); font-family: var(--mono); font-weight: 700;
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase; text-align: left; padding: 10px 18px;
+    }
+    .pt .group-row.auto td { color: var(--gold); }
+
+    .iv-box {
+      margin-top: 24px; background: linear-gradient(135deg, var(--bg2), var(--bg3));
+      border: 1px solid var(--border); border-radius: var(--r);
+      padding: 24px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    }
+    .iv-box .head { flex: 1; min-width: 200px; }
+    .iv-box .head h4 { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+    .iv-box .head p { font-size: 13px; color: var(--text2); }
+    .iv-card {
+      background: var(--bg); border: 1px solid var(--border2); border-radius: 10px;
+      padding: 14px 22px; text-align: center; min-width: 120px;
+    }
+    .iv-card .lvl { font-size: 11px; font-family: var(--mono); color: var(--text3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .5px; }
+    .iv-card .pr { font-family: var(--mono); font-size: 21px; font-weight: 700; color: var(--c2); }
+
+    .note-box {
+      display: flex; align-items: flex-start; gap: 10px; margin-top: 18px;
+      padding: 14px 18px; background: rgba(52,211,153,0.07); border: 1px solid rgba(52,211,153,0.2); border-radius: 10px;
+      font-size: 13px; color: var(--text2);
+    }
+    .note-box svg { color: var(--c3); flex-shrink: 0; margin-top: 1px; }
+
+    /* ─── PROCESS ─── */
+    .process { background: var(--bg); }
+    .steps {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px; margin-top: 52px; position: relative;
+    }
+    .step {
+      background: var(--bg1); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 28px 24px; text-align: center; transition: all .25s;
+    }
+    .step:hover { border-color: rgba(56,189,248,.25); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,.4); }
+    .step-num {
+      width: 54px; height: 54px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      color: #080b14; font-family: var(--mono); font-size: 20px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; box-shadow: 0 0 28px var(--c1-glow);
+    }
+    .step h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+    .step p { font-size: 14px; color: var(--text2); }
+
+    /* ─── CTA ─── */
+    .cta {
+      background: linear-gradient(135deg, #060c1e 0%, #0a1230 50%, #080b14 100%);
+      position: relative; overflow: hidden;
+    }
+    .cta::before {
+      content: ''; position: absolute; top: -250px; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 700px;
+      background: radial-gradient(ellipse, rgba(56,189,248,.12) 0%, rgba(129,140,248,.06) 40%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-inner { text-align: center; position: relative; z-index: 1; }
+    .cta h2 { font-size: clamp(28px, 4vw, 48px); font-weight: 900; letter-spacing: -1px; margin-bottom: 14px; }
+    .cta p { font-size: 16px; color: var(--text2); margin-bottom: 44px; }
+
+    .socials {
+      display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    }
+    .social-card {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border2);
+      border-radius: 14px; padding: 16px 24px; min-width: 190px;
+      backdrop-filter: blur(10px); transition: all .2s;
+    }
+    .social-card:hover { background: rgba(255,255,255,0.08); border-color: var(--c1); transform: translateY(-3px); box-shadow: 0 20px 40px rgba(0,0,0,.4), 0 0 24px var(--c1-glow); }
+    .sc-icon {
+      width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+    }
+    .sc-icon.fb { background: #1877f2; color: #fff; }
+    .sc-icon.tt { background: #010101; color: #fff; border: 1px solid #333; }
+    .sc-icon.yt { background: #ff0000; color: #fff; }
+    .sc-text { text-align: left; }
+    .sc-text strong { display: block; font-size: 15px; font-weight: 700; }
+    .sc-text small { font-size: 12px; color: var(--text2); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg1); border-top: 1px solid var(--border);
+      padding: 28px 0; text-align: center;
+    }
+    footer p { font-size: 13px; color: var(--text3); }
+    footer a { color: var(--text2); }
+    footer a:hover { color: var(--c1); }
+
+    /* ─── MODAL ─── */
+    .modal-bg {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,.85); backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+      opacity: 0; pointer-events: none; transition: opacity .25s;
+    }
+    .modal-bg.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: var(--bg2); border: 1px solid var(--border2); border-radius: var(--r2);
+      max-width: 660px; width: 100%; max-height: 90vh; overflow-y: auto;
+      transform: scale(.96); transition: transform .25s; position: relative;
+    }
+    .modal-bg.open .modal-box { transform: scale(1); }
+    .modal-box img { width: 100%; border-radius: var(--r2) var(--r2) 0 0; }
+    .modal-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(0,0,0,.6); border: 1px solid var(--border2); color: #fff;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ── NAV ── -->
+<header>
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand">
+      <div class="brand-logo">ĐG</div>
+      <div class="brand-text">ĐỨC GIANG <small>Tester Education</small></div>
+    </a>
+    <nav class="nav-links">
+      <a href="#courses">Khóa học</a>
+      <a href="#pricing">Học phí</a>
+      <a href="#process">Lộ trình</a>
+      <a href="#why">Vì sao chọn</a>
+      <a href="http://ducgiangtester.com/automation/" target="_blank">Thực hành</a>
+      <a href="http://ducgiangtester.com/demoErcommerce/" target="_blank">Demo site</a>
+    </nav>
+    <a href="#contact" class="nav-cta">Đăng ký tư vấn</a>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero" id="top">
+  <div class="hero-glow"></div>
+  <div class="wrap hero-grid">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="pip">QA / TESTER</span>
+        <span>🎯 Học đúng thứ, thực hành là chính</span>
+      </div>
+      <h1>Trở thành <span class="g">Tester</span><br>chuyên nghiệp từ con số 0</h1>
+      <p class="hero-lead">Đào tạo từ Manual đến Automation — thực chiến 100%, đúng quy trình doanh nghiệp. Học xong tự tin đi làm ngay.</p>
+      <div class="hero-btns">
+        <a href="#courses" class="btn btn-cyan">Xem khóa học →</a>
+        <a href="#contact" class="btn btn-outline">Nhận tư vấn miễn phí</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="n">10+</div>
+          <div class="l">Khóa học chuyên sâu</div>
+        </div>
+        <div class="stat">
+          <div class="n">100%</div>
+          <div class="l">Thực hành thực chiến</div>
+        </div>
+        <div class="stat">
+          <div class="n">1-1</div>
+          <div class="l">Kèm riêng theo yêu cầu</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Terminal animation -->
+    <div class="hero-right">
+      <div class="terminal">
+        <div class="term-bar">
+          <span class="term-dot r"></span>
+          <span class="term-dot y"></span>
+          <span class="term-dot g"></span>
+          <span class="term-title">playwright.test.ts — dg-education</span>
+        </div>
+        <div class="term-body">
+          <div><span class="comment">// Playwright TypeScript – E2E Test</span></div>
+          <div><span class="keyword">import</span> <span class="cmd">{ test, expect } </span><span class="keyword">from</span> <span class="pass">'@playwright/test'</span><span class="cmd">;</span></div>
+          <br>
+          <div><span class="keyword">test</span><span class="cmd">(</span><span class="pass">'Login flow'</span><span class="cmd">, </span><span class="keyword">async</span> <span class="cmd">({ page }) => {</span></div>
+          <div>&nbsp;&nbsp;<span class="keyword">await</span> <span class="cmd">page.goto(</span><span class="pass">'https://app.example.com'</span><span class="cmd">);</span></div>
+          <div>&nbsp;&nbsp;<span class="keyword">await</span> <span class="cmd">page.fill(</span><span class="pass">'#email'</span><span class="cmd">, </span><span class="pass">'user@test.com'</span><span class="cmd">);</span></div>
+          <div>&nbsp;&nbsp;<span class="keyword">await</span> <span class="cmd">page.click(</span><span class="pass">'[data-cy=submit]'</span><span class="cmd">);</span></div>
+          <div>&nbsp;&nbsp;<span class="keyword">await</span> <span class="cmd">expect(page).toHaveURL(</span><span class="pass">'/dashboard'</span><span class="cmd">);</span></div>
+          <div><span class="cmd">});</span></div>
+          <br>
+          <div><span class="prompt">❯</span> <span class="cmd">npx playwright test</span></div>
+          <div><span class="pass">✓</span> <span class="cmd">Login flow </span><span class="num">(1.2s)</span></div>
+          <div><span class="pass">✓</span> <span class="cmd">Register validation </span><span class="num">(0.8s)</span></div>
+          <div><span class="pass">✓</span> <span class="cmd">Checkout flow </span><span class="num">(2.1s)</span></div>
+          <div><span class="pass">✓ </span><span class="num">3</span><span class="cmd"> passed</span><span class="pass"> · 0 failed</span> <span class="comment">(4.1s)</span></div>
+          <div><span class="prompt">❯</span> <span class="cursor"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TOOLS STRIP ── -->
+<div class="tools-strip">
+  <div class="wrap" style="overflow:hidden">
+    <div class="tools-scroll">
+      <span class="tool-pill"><span class="dot"></span>Selenium Java</span>
+      <span class="tool-pill"><span class="dot"></span>Playwright TypeScript</span>
+      <span class="tool-pill"><span class="dot"></span>Katalon Studio</span>
+      <span class="tool-pill"><span class="dot"></span>Postman & Newman</span>
+      <span class="tool-pill"><span class="dot"></span>REST API Testing</span>
+      <span class="tool-pill"><span class="dot"></span>SQL Server</span>
+      <span class="tool-pill"><span class="dot"></span>JMeter</span>
+      <span class="tool-pill"><span class="dot"></span>GitHub / CI-CD</span>
+      <span class="tool-pill"><span class="dot"></span>TestNG</span>
+      <span class="tool-pill"><span class="dot"></span>Page Object Model</span>
+      <span class="tool-pill"><span class="dot"></span>Agile / Scrum</span>
+      <span class="tool-pill"><span class="dot"></span>Jira / Bug Tracking</span>
+      <!-- duplicate for infinite scroll -->
+      <span class="tool-pill"><span class="dot"></span>Selenium Java</span>
+      <span class="tool-pill"><span class="dot"></span>Playwright TypeScript</span>
+      <span class="tool-pill"><span class="dot"></span>Katalon Studio</span>
+      <span class="tool-pill"><span class="dot"></span>Postman & Newman</span>
+      <span class="tool-pill"><span class="dot"></span>REST API Testing</span>
+      <span class="tool-pill"><span class="dot"></span>SQL Server</span>
+      <span class="tool-pill"><span class="dot"></span>JMeter</span>
+      <span class="tool-pill"><span class="dot"></span>GitHub / CI-CD</span>
+      <span class="tool-pill"><span class="dot"></span>TestNG</span>
+      <span class="tool-pill"><span class="dot"></span>Page Object Model</span>
+      <span class="tool-pill"><span class="dot"></span>Agile / Scrum</span>
+      <span class="tool-pill"><span class="dot"></span>Jira / Bug Tracking</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── FEATURES ── -->
+<section class="features" id="why">
+  <div class="wrap">
+    <div class="tc">
+      <span class="eyebrow">Vì sao chọn chúng tôi</span>
+      <h2 class="section-title">Đào tạo Tester theo hướng <span class="g">thực chiến</span></h2>
+      <p class="section-sub">Lộ trình bài bản, học đến đâu làm được đến đó — đúng quy trình doanh nghiệp thực tế.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+          </svg>
+        </div>
+        <h3>Học thực chiến 100%</h3>
+        <p>Mỗi buổi học gắn với bài tập và dự án thực tế, không lan man lý thuyết.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <h3>Nhiều hình thức học</h3>
+        <p>Video record, lớp nhóm 2-3 người hoặc dạy kèm 1-1 tùy nhu cầu của bạn.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/><polyline points="9 15 11 17 15 13"/>
+          </svg>
+        </div>
+        <h3>Hỗ trợ trọn khóa</h3>
+        <p>Tài liệu, bài tập và giải đáp xuyên suốt — không học một mình.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <h3>Sẵn sàng đi làm</h3>
+        <p>Ôn tập phỏng vấn, làm CV theo từng level từ Fresher đến Senior.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── COURSES ── -->
+<section class="courses" id="courses">
+  <div class="wrap">
+    <div class="tc">
+      <span class="eyebrow">Chương trình đào tạo</span>
+      <h2 class="section-title">Các khóa học tại <span class="g">trung tâm</span></h2>
+      <p class="section-sub">Bấm vào ảnh để xem chi tiết nội dung chương trình đầy đủ.</p>
+    </div>
+
+    <!-- MANUAL GROUP -->
+    <div class="group-head manual"><span class="gd"></span>NHÓM MANUAL<span class="gl"></span></div>
+    <div class="course-grid">
+
+      <article class="course-card" data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Beginner-4AOAJzusAXJJ6W7ngRHHBCjIaHPUZs.png">
+        <div class="course-thumb" onclick="openModal(this.closest('.course-card').dataset.img)">
+          <span class="badge-tag m">Người mới</span>
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Beginner-4AOAJzusAXJJ6W7ngRHHBCjIaHPUZs.png" alt="Kiểm thử Manual" loading="lazy"/>
+          <span class="view-overlay">🔍 Xem chi tiết</span>
+        </div>
+        <div class="course-body">
+          <h3>Kiểm thử phần mềm Manual</h3>
+          <p class="desc">Bước đầu vững chắc vào nghề QA cho người chưa có nền tảng lập trình.</p>
+          <ul>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Nền tảng kiểm thử, SDLC & STLC</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Phân tích & viết testcase thực tế</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Agile/Scrum, log bug với Jira</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>SQL, API & chuẩn bị đi làm</li>
+          </ul>
+          <div class="course-foot">
+            <div class="price"><div class="lbl">Học phí từ</div><div class="val gold">1.200k <span>/ khóa</span></div></div>
+            <button class="btn-xs" onclick="openModal(this.closest('.course-card').dataset.img)">Chi tiết</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="course-card" data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/API%20manual-6JzbyGujZX9TsOfchak98WJMjF08h8.png">
+        <div class="course-thumb" onclick="openModal(this.closest('.course-card').dataset.img)">
+          <span class="badge-tag m">API Testing</span>
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/API%20manual-6JzbyGujZX9TsOfchak98WJMjF08h8.png" alt="API Testing" loading="lazy"/>
+          <span class="view-overlay">🔍 Xem chi tiết</span>
+        </div>
+        <div class="course-body">
+          <h3>Kiểm thử API – Postman & RESTful</h3>
+          <p class="desc">Kỹ năng bắt buộc với mọi QA hiện đại: phát hiện lỗi sớm, độc lập với giao diện.</p>
+          <ul>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Nền tảng RESTful API, HTTP, Status Code</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Phân tích & viết testcase API</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Kiểm thử tích hợp UI – Backend</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Postman thực chiến, data-driven test</li>
+          </ul>
+          <div class="course-foot">
+            <div class="price"><div class="lbl">Học phí từ</div><div class="val gold">800k <span>/ khóa</span></div></div>
+            <button class="btn-xs" onclick="openModal(this.closest('.course-card').dataset.img)">Chi tiết</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="course-card" data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sql%20c%C6%A1%20b%E1%BA%A3n-n5FLG0VnndCcvZBLxHp2w5CIqTYwDN.png">
+        <div class="course-thumb" onclick="openModal(this.closest('.course-card').dataset.img)">
+          <span class="badge-tag m">SQL</span>
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Sql%20c%C6%A1%20b%E1%BA%A3n-n5FLG0VnndCcvZBLxHp2w5CIqTYwDN.png" alt="SQL cho Tester" loading="lazy"/>
+          <span class="view-overlay">🔍 Xem chi tiết</span>
+        </div>
+        <div class="course-body">
+          <h3>SQL dành cho Tester</h3>
+          <p class="desc">Một QA biết SQL là một QA khác biệt — kiểm tra dữ liệu trực tiếp trong database.</p>
+          <ul>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Nền tảng CSDL, cài đặt SQL Server</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>SELECT, INSERT, UPDATE, DELETE, JOIN</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Thực hành với CSDL thực tế</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Ứng dụng SQL vào công việc QA</li>
+          </ul>
+          <div class="course-foot">
+            <div class="price"><div class="lbl">Học phí từ</div><div class="val gold">600k <span>/ khóa</span></div></div>
+            <button class="btn-xs" onclick="openModal(this.closest('.course-card').dataset.img)">Chi tiết</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="course-card special">
+        <div class="special-head">
+          <div class="special-icon">📋</div>
+          <h3>Testcase chuyên sâu</h3>
+        </div>
+        <div class="course-body">
+          <p class="desc">Rèn kỹ năng phân tích yêu cầu và viết testcase chuẩn dự án — kỹ năng cốt lõi của mọi Tester.</p>
+          <ul>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Phân tích màn hình, đọc tài liệu SRS</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Testcase common UI & function</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Thực hành viết testcase thực tế</li>
+          </ul>
+          <div class="course-foot" style="border-top-color:rgba(255,255,255,.08)">
+            <div class="price"><div class="lbl" style="color:#6b85ab">Học phí từ</div><div class="val gold">500k <span style="color:#6b85ab">/ khóa</span></div></div>
+            <a href="#contact" class="btn-xs" style="background:var(--gold);color:#080b14;border-color:var(--gold)">Tư vấn</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- AUTOMATION GROUP -->
+    <div class="group-head auto"><span class="gd"></span>NHÓM AUTOMATION<span class="gl"></span></div>
+    <div class="course-grid">
+
+      <article class="course-card" data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/API%20automation%20with%20postman-o8IhUArzd1cWuhjpMXWYTbq9ricC06.png">
+        <div class="course-thumb" onclick="openModal(this.closest('.course-card').dataset.img)">
+          <span class="badge-tag a">Postman + CI/CD</span>
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/API%20automation%20with%20postman-o8IhUArzd1cWuhjpMXWYTbq9ricC06.png" alt="API Automation" loading="lazy"/>
+          <span class="view-overlay">🔍 Xem chi tiết</span>
+        </div>
+        <div class="course-body">
+          <h3>API Automation – Postman & CI/CD</h3>
+          <p class="desc">Nâng API lên cấp độ Automation Engineer chuẩn doanh nghiệp.</p>
+          <ul>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Scripting & API automation trong Postman</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Chạy test & report với Newman</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Tích hợp GitHub, làm việc nhóm</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>CI/CD với Jenkins</li>
+          </ul>
+          <div class="course-foot">
+            <div class="price"><div class="lbl">Học phí từ</div><div class="val cyan">1.200k <span>/ khóa</span></div></div>
+            <button class="btn-xs" onclick="openModal(this.closest('.course-card').dataset.img)">Chi tiết</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="course-card" data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Katalon%20Studio-B1TPW22vMToW8XYyPXkbXmopRbC353.png">
+        <div class="course-thumb" onclick="openModal(this.closest('.course-card').dataset.img)">
+          <span class="badge-tag a">Katalon</span>
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Katalon%20Studio-B1TPW22vMToW8XYyPXkbXmopRbC353.png" alt="Katalon Studio" loading="lazy"/>
+          <span class="view-overlay">🔍 Xem chi tiết</span>
+        </div>
+        <div class="course-body">
+          <h3>Automation web với Katalon Studio</h3>
+          <p class="desc">Automation không rào cản — phù hợp người chưa vững lập trình, bắt đầu nhanh.</p>
+          <ul>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Làm quen & cấu hình Katalon Studio</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Web elements, xử lý UI phức tạp</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Groovy cơ bản cho automation</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Tổ chức code & thực hành project</li>
+          </ul>
+          <div class="course-foot">
+            <div class="price"><div class="lbl">Học phí từ</div><div class="val cyan">1.500k <span>/ khóa</span></div></div>
+            <button class="btn-xs" onclick="openModal(this.closest('.course-card').dataset.img)">Chi tiết</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="course-card" data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Selenium%20Java-HYnyGyHJaXM07Wm6QrB6i0JUrgVufX.png">
+        <div class="course-thumb" onclick="openModal(this.closest('.course-card').dataset.img)">
+          <span class="badge-tag a">Selenium Java</span>
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Selenium%20Java-HYnyGyHJaXM07Wm6QrB6i0JUrgVufX.png" alt="Selenium Java" loading="lazy"/>
+          <span class="view-overlay">🔍 Xem chi tiết</span>
+        </div>
+        <div class="course-body">
+          <h3>Selenium với Java</h3>
+          <p class="desc">Bộ đôi kinh điển được dùng rộng rãi nhất trong ngành QA Automation.</p>
+          <ul>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Java nền tảng: cú pháp, OOP, nâng cao</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Locator strategy, xử lý elements</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Selenium nâng cao, Wait, exception</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>TestNG & Page Object Model</li>
+          </ul>
+          <div class="course-foot">
+            <div class="price"><div class="lbl">Học phí từ</div><div class="val cyan">2.000k <span>/ khóa</span></div></div>
+            <button class="btn-xs" onclick="openModal(this.closest('.course-card').dataset.img)">Chi tiết</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="course-card" data-img="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Playwright%20TypeScript-WvuwjkO8PvUIIFoQ5PA26m7JnPBsbJ.png">
+        <div class="course-thumb" onclick="openModal(this.closest('.course-card').dataset.img)">
+          <span class="badge-tag a">Playwright TS</span>
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Playwright%20TypeScript-WvuwjkO8PvUIIFoQ5PA26m7JnPBsbJ.png" alt="Playwright TypeScript" loading="lazy"/>
+          <span class="view-overlay">🔍 Xem chi tiết</span>
+        </div>
+        <div class="course-body">
+          <h3>Playwright với TypeScript</h3>
+          <p class="desc">Framework automation thế hệ mới — test chắc chắn, ít flaky, dễ maintain.</p>
+          <ul>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>TypeScript nền tảng cho automation</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Locator strategy & xử lý UI phức tạp</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Data-driven, Hooks & Page Object Model</li>
+            <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3"><path d="m5 12 5 5L20 7"/></svg>Report & debug với Trace Viewer</li>
+          </ul>
+          <div class="course-foot">
+            <div class="price"><div class="lbl">Học phí từ</div><div class="val cyan">2.500k <span>/ khóa</span></div></div>
+            <button class="btn-xs" onclick="openModal(this.closest('.course-card').dataset.img)">Chi tiết</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ── -->
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="tc">
+      <span class="eyebrow">Bảng học phí</span>
+      <h2 class="section-title">Chọn hình thức <span class="g">phù hợp</span></h2>
+      <p class="section-sub">Đơn vị: nghìn đồng (k). Video record là hình thức được khuyến nghị và tiết kiệm nhất.</p>
+    </div>
+    <div class="table-wrap">
+      <table class="pt">
+        <thead>
+          <tr>
+            <th>Khóa học</th>
+            <th class="reco">Video Record<span class="small">★ Khuyến nghị</span></th>
+            <th>Nhóm 3 người<span class="small">/ người</span></th>
+            <th>Nhóm 2 người<span class="small">/ người</span></th>
+            <th>Dạy kèm 1-1<span class="small">/ người</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="group-row"><td colspan="5">Manual</td></tr>
+          <tr><td>Kiểm thử phần mềm (Beginner)</td><td class="reco">1.200k</td><td>3.000k</td><td>4.500k</td><td>6.000k</td></tr>
+          <tr><td>API testing cơ bản tới nâng cao</td><td class="reco">800k</td><td>2.000k</td><td>3.000k</td><td>4.000k</td></tr>
+          <tr><td>SQL cơ bản</td><td class="reco">600k</td><td>2.000k</td><td>2.500k</td><td>3.000k</td></tr>
+          <tr><td>SQL nâng cao</td><td class="reco">800k</td><td>2.500k</td><td>3.000k</td><td>4.000k</td></tr>
+          <tr><td>Testcase</td><td class="reco">500k</td><td>1.000k</td><td>1.500k</td><td>2.000k</td></tr>
+          <tr class="group-row auto"><td colspan="5">Automation</td></tr>
+          <tr><td>Auto API – Postman & Newman, CI/CD</td><td class="reco">1.200k</td><td>4.500k</td><td>6.000k</td><td>8.000k</td></tr>
+          <tr><td>Auto web với Katalon Studio</td><td class="reco">1.500k</td><td>5.000k</td><td>7.000k</td><td>9.000k</td></tr>
+          <tr><td>Auto web với Selenium Java</td><td class="reco">2.000k</td><td>6.000k</td><td>8.000k</td><td>10.000k</td></tr>
+          <tr><td>Auto web với Playwright TypeScript</td><td class="reco">2.000k</td><td>6.000k</td><td>8.000k</td><td>10.000k</td></tr>
+          <tr><td>Kiểm thử hiệu năng với JMeter</td><td class="reco">600k</td><td>updating</td><td>updating</td><td>updating</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="iv-box">
+      <div class="head">
+        <h4>🎤 Ôn tập phỏng vấn (kèm 1-1)</h4>
+        <p>Hướng dẫn làm CV, luyện trả lời phỏng vấn theo từng cấp độ.</p>
+      </div>
+      <div class="iv-card"><div class="lvl">Intern / Fresher</div><div class="pr">1.000k</div></div>
+      <div class="iv-card"><div class="lvl">Junior / Middle</div><div class="pr">1.500k</div></div>
+      <div class="iv-card"><div class="lvl">Senior</div><div class="pr">2.000k</div></div>
+    </div>
+
+    <div class="note-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+      </svg>
+      <span><strong>Lưu ý:</strong> Học phí đã bao gồm tài liệu, bài tập thực hành và hỗ trợ trong suốt quá trình học.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROCESS ── -->
+<section class="process" id="process">
+  <div class="wrap">
+    <div class="tc">
+      <span class="eyebrow">Lộ trình học</span>
+      <h2 class="section-title">4 bước để <span class="g">đi làm Tester</span></h2>
+      <p class="section-sub">Bạn có thể bắt đầu từ bất kỳ đâu phù hợp với mục tiêu nghề nghiệp của mình.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Nền tảng Manual</h3>
+        <p>Quy trình kiểm thử, viết testcase, log bug với Jira.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Kỹ năng kỹ thuật</h3>
+        <p>SQL kiểm tra dữ liệu và API testing với Postman.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Automation</h3>
+        <p>Chọn Katalon, Selenium Java, Playwright hoặc Postman CI/CD.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <h3>Sẵn sàng đi làm</h3>
+        <p>Hoàn thiện CV và ôn tập phỏng vấn theo từng level.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section class="cta" id="contact">
+  <div class="wrap cta-inner">
+    <span class="eyebrow" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:#c4beff">Đăng ký tư vấn</span>
+    <h2>Sẵn sàng bắt đầu hành trình<br><span class="g">Tester</span> của bạn?</h2>
+    <p>Nhắn cho chúng tôi qua Facebook hoặc TikTok để được tư vấn lộ trình và nhận ưu đãi học phí mới nhất.</p>
+    <div class="socials">
+      <a href="https://www.facebook.com/ducgiangtestereducation" target="_blank" rel="noopener" class="social-card">
+        <span class="sc-icon fb"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg></span>
+        <div class="sc-text"><strong>Fanpage</strong><small>Nhắn tin tư vấn</small></div>
+      </a>
+      <a href="https://www.facebook.com/ducgiangtester/" target="_blank" rel="noopener" class="social-card">
+        <span class="sc-icon fb"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg></span>
+        <div class="sc-text"><strong>Facebook cá nhân</strong><small>Đăng ký ngay</small></div>
+      </a>
+      <a href="https://www.tiktok.com/@ducgiangtestereducation" target="_blank" rel="noopener" class="social-card">
+        <span class="sc-icon tt"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3a5.6 5.6 0 0 0 4.5 4.6v3a8.6 8.6 0 0 1-4.5-1.3v6.4a6.2 6.2 0 1 1-6.2-6.2c.3 0 .7 0 1 .1v3.1a3.1 3.1 0 1 0 2.2 3V3h3z"/></svg></span>
+        <div class="sc-text"><strong>TikTok</strong><small>Theo dõi & xem video</small></div>
+      </a>
+      <a href="https://www.youtube.com/@DucGiangTesterEducation" target="_blank" rel="noopener" class="social-card">
+        <span class="sc-icon yt"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.3 31.3 0 0 0 0 12a31.3 31.3 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.3 31.3 0 0 0 24 12a31.3 31.3 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg></span>
+        <div class="sc-text"><strong>YouTube</strong><small>Khóa học miễn phí</small></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="wrap">
+    <p>© 2025 <strong>Đức Giang Tester Education</strong> · Đào tạo QA/Tester thực chiến ·
+      <a href="http://ducgiangtester.com/automation/" target="_blank">Practice Site</a>
+    </p>
+  </div>
+</footer>
+
+<!-- ── MODAL ── -->
+<div class="modal-bg" id="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+    <img id="modal-img" src="" alt="Course detail"/>
+  </div>
+</div>
+
+<script>
+  function openModal(src) {
+    document.getElementById('modal-img').src = src;
+    document.getElementById('modal').classList.add('open');
+  }
+  function closeModal(e) {
+    if (e.target === document.getElementById('modal')) document.getElementById('modal').classList.remove('open');
+  }
+  document.addEventListener('keydown', e => { if(e.key==='Escape') document.getElementById('modal').classList.remove('open'); });
+</script>
+</body>
+</html>
