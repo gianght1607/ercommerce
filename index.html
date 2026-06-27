@@ -851,7 +851,7 @@ const COURSES = [
       <a href="#why">Vì sao chọn</a>
       <a href="http://ducgiangtester.com/practice/" target="_blank">Thực hành</a>
       <a href="http://ducgiangtester.com/demo/" target="_blank">Site demo</a>
-      <a href="http://ducgiangtester.com/api/" target="_blank">API collection</a>
+      <a href="http://ducgiangtester.com/api/" download>API collection</a>
 
 
     </nav>
@@ -1237,6 +1237,111 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') showHome(); 
 
 // Init
 renderCourseList();
+</script>
+
+  <!-- =============================================
+     NÚT ĐẾM NGƯỢC - HIỆN MẬT KHẨU FILE ZIP
+     Paste đoạn này vào cuối trang, trước </body>
+     Đổi DGT@2025 thành mật khẩu thật của bạn
+============================================= -->
+
+<section id="zip-password" style="padding: 60px 20px; text-align: center; background: var(--bg1); border-top: 1px solid var(--border);">
+  <h3 style="margin-bottom: 8px; color: var(--text);">Tải Postman Collection</h3>
+  <p style="color: var(--text2); margin-bottom: 24px;">Nhấn nút bên dưới để nhận mật khẩu giải nén file ZIP</p>
+
+  <!-- BƯỚC 1: Nút ban đầu -->
+  <div id="step-btn">
+    <button onclick="startCountdown()" style="
+      padding: 14px 36px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+    ">
+      🔓 Nhận mật khẩu file ZIP
+    </button>
+    <p style="font-size: 13px; color: #999; margin-top: 8px;">Vui lòng chờ 60 giây để nhận mã</p>
+  </div>
+
+  <!-- BƯỚC 2: Vòng đếm ngược -->
+  <div id="step-count" style="display:none;">
+    <div style="position: relative; width: 120px; height: 120px; margin: 0 auto;">
+      <svg style="position:absolute;top:0;left:0;transform:rotate(-90deg)" width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="52" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+        <circle id="arc" cx="60" cy="60" r="52" fill="none" stroke="#2563eb" stroke-width="8"
+          stroke-dasharray="326.7" stroke-dashoffset="0" stroke-linecap="round"
+          style="transition: stroke-dashoffset 1s linear;"/>
+      </svg>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:600;color: var(--text);" id="countNum">60</div>
+    </div>
+  <p style="color: var(--text2); margin-top: 16px;">Đang xác nhận quyền truy cập...</p>  </div>
+
+  <!-- BƯỚC 3: Hiện mật khẩu -->
+  <div id="step-pw" style="display:none;">
+    <div style="
+      display: inline-block;
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
+      border-radius: 12px;
+      padding: 24px 40px;
+    ">
+      <p style="color: #16a34a; font-size: 14px; margin-bottom: 8px;">✅ Xác nhận thành công</p>
+      <div id="pwDisplay" style="font-size: 32px; font-weight: 700; letter-spacing: 6px; color: #15803d; font-family: monospace;">DGT@2025</div>
+      <p style="font-size: 12px; color: #999; margin-top: 8px;">Dùng mã này để mở file ZIP vừa tải về</p>
+      <button onclick="copyPw()" id="copyBtn" style="
+        margin-top: 12px;
+        padding: 7px 20px;
+        font-size: 13px;
+        border-radius: 6px;
+        border: 1.5px solid #86efac;
+        background: transparent;
+        color: #16a34a;
+        cursor: pointer;
+      ">📋 Sao chép mã</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ⬇⬇⬇ ĐỔI MẬT KHẨU Ở ĐÂY ⬇⬇⬇
+  const PASSWORD = "DGT@2025";
+  // ⬆⬆⬆ ĐỔI MẬT KHẨU Ở ĐÂY ⬆⬆⬆
+
+  const TOTAL = 60;
+
+  function startCountdown() {
+    document.getElementById("step-btn").style.display = "none";
+    document.getElementById("step-count").style.display = "block";
+
+    let remaining = TOTAL;
+    const arc = document.getElementById("arc");
+    const numEl = document.getElementById("countNum");
+    const circumference = 326.7;
+
+    const timer = setInterval(() => {
+      remaining--;
+      numEl.textContent = remaining;
+      arc.style.strokeDashoffset = circumference * (1 - remaining / TOTAL);
+
+      if (remaining <= 0) {
+        clearInterval(timer);
+        document.getElementById("step-count").style.display = "none";
+        document.getElementById("step-pw").style.display = "block";
+        document.getElementById("pwDisplay").textContent = PASSWORD;
+      }
+    }, 1000);
+  }
+
+  function copyPw() {
+    navigator.clipboard.writeText(PASSWORD).then(() => {
+      const btn = document.getElementById("copyBtn");
+      btn.textContent = "✅ Đã sao chép!";
+      setTimeout(() => { btn.textContent = "📋 Sao chép mã"; }, 2000);
+    });
+  }
 </script>
 </body>
 </html>
