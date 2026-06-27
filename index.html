@@ -497,6 +497,75 @@
     .sc-text strong { display: block; font-size: 14.5px; font-weight: 700; }
     .sc-text small { font-size: 12px; color: var(--text2); }
 
+    <!-- PASTE VÀO TRƯỚC THẺ </footer> -->
+<section style="padding: 60px 0; text-align: center; background: var(--bg1); border-top: 1px solid var(--border);">
+  <div class="wrap">
+    <p style="font-size: 14px; color: var(--text2); margin-bottom: 20px;">
+      📦 Nhấn để lấy mã giải nén file ZIP API collection!
+    </p>
+
+    <button id="revealBtn" class="btn btn-cyan" onclick="startCountdown()">
+      🔒 Lấy mã giải nén
+    </button>
+
+    <div id="countdownArea" style="display:none; margin-top: 20px;">
+      <p style="font-family: var(--mono); font-size: 14px; color: var(--text2);">
+        Vui lòng chờ <strong id="sec" style="color: var(--c1);">60</strong> giây...
+      </p>
+      <div style="width: 280px; height: 4px; background: var(--bg3); border-radius: 99px; margin: 10px auto 0; overflow: hidden;">
+        <div id="progressFill" style="height: 100%; width: 0%; border-radius: 99px; background: linear-gradient(90deg, var(--c1), var(--c2)); transition: width 1s linear;"></div>
+      </div>
+    </div>
+
+    <div id="codeBox" style="display:none; margin-top: 24px;">
+      <div style="display: inline-block; background: var(--bg2); border: 1px solid rgba(56,189,248,0.3); border-radius: 14px; padding: 24px 40px;">
+        <p style="font-family: var(--mono); font-size: 11px; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">Mã giải nén file ZIP</p>
+        <p id="codeValue" style="font-family: var(--mono); font-size: 32px; font-weight: 700; color: var(--c1); letter-spacing: 6px;">DG2025</p>
+        <button onclick="copyCode()" id="copyBtn" class="btn-ghost" style="margin-top: 14px;">
+          📋 Sao chép mã
+        </button>
+        <p style="font-size: 12px; color: var(--text3); margin-top: 8px;">Dùng mã này để giải nén file .zip vừa tải về.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const SECRET_CODE = 'DG2025'; // ← ĐỔI MÃ THẬT VÀO ĐÂY
+
+function startCountdown() {
+  document.getElementById('revealBtn').disabled = true;
+  document.getElementById('revealBtn').style.opacity = '0.5';
+  document.getElementById('countdownArea').style.display = 'block';
+
+  let remaining = 60;
+  document.getElementById('sec').textContent = remaining;
+
+  setTimeout(() => {
+    document.getElementById('progressFill').style.width = '100%';
+  }, 50);
+
+  const timer = setInterval(() => {
+    remaining--;
+    document.getElementById('sec').textContent = remaining;
+    if (remaining <= 0) {
+      clearInterval(timer);
+      document.getElementById('revealBtn').style.display = 'none';
+      document.getElementById('countdownArea').style.display = 'none';
+      document.getElementById('codeBox').style.display = 'block';
+    }
+  }, 1000);
+}
+
+function copyCode() {
+  navigator.clipboard.writeText(SECRET_CODE).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ Đã sao chép!';
+    setTimeout(() => { btn.textContent = '📋 Sao chép mã'; }, 2000);
+  });
+}
+</script>
+    
     /* ═══ FOOTER ═══ */
     footer { background: var(--bg1); border-top: 1px solid var(--border); padding: 26px 0; text-align: center; }
     footer p { font-size: 13px; color: var(--text3); }
