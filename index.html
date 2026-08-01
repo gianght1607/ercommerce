@@ -213,7 +213,7 @@
 
     header {
       position: sticky;
-      top: 0;
+      top: 41px;
       z-index: 200;
       background: rgba(7, 9, 15, 0.88);
       backdrop-filter: blur(24px);
@@ -1421,6 +1421,9 @@
 
     /* ═══ PROMO MARQUEE BANNER ═══ */
     .promo-banner {
+      position: sticky;
+      top: 0;
+      z-index: 210;
       background: linear-gradient(90deg, #fbbf24, #f59e0b, #fbbf24);
       background-size: 200% 100%;
       animation: promo-shimmer 3s linear infinite;
@@ -2035,6 +2038,19 @@
     function showHome() { document.getElementById('detail-overlay').classList.remove('open'); document.body.style.overflow = ''; }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') showHome() });
     renderCourseList();
+  </script>
+  <script>
+    (function () {
+      function syncHeaderOffset() {
+        var banner = document.querySelector('.promo-banner');
+        var header = document.querySelector('header');
+        if (!banner || !header) return;
+        header.style.top = banner.offsetHeight + 'px';
+      }
+      window.addEventListener('load', syncHeaderOffset);
+      window.addEventListener('resize', syncHeaderOffset);
+      syncHeaderOffset();
+    })();
   </script>
 </body>
 
